@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import sharp from 'sharp';
-import _itemDefs from '../client-assets/defs/itemDefs.json';
+import _itemDefs from '../static/client-assets/defs/itemDefs.json';
 import { clientAssetsPath, ensureDirExists, itemNameToFileName } from '../lib';
 
 const itemDefs = _itemDefs as ItemDef[];

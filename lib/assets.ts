@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-export const clientAssetsPath = path.join(fs.realpathSync('.'), 'src', 'client-assets');
+export const clientAssetsPath = path.join(fs.realpathSync('.'), 'static', 'client-assets');
 
 export const itemNameToFileName = (itemName: string, extension: string) => {
 	itemName = itemName.toLowerCase();
