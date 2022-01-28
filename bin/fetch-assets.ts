@@ -1,6 +1,7 @@
 import fetch from 'node-fetch';
 import path from 'path';
 import fs from 'fs';
+import { clientAssetsPath, ensureDirExists } from '../lib';
 
 interface ClientAssetsData {
 	data: {
@@ -14,12 +15,6 @@ interface ClientAssetsData {
 		};
 	};
 }
-
-const ensureDirExists = (p: string) => {
-	if (!fs.existsSync(p)) fs.mkdirSync(p, { recursive: true });
-};
-
-const clientAssetsPath = path.join(fs.realpathSync('.'), 'client-assets');
 
 const clientAssetsRes = await fetch('https://highspell.com:3002/assetsClient');
 const clientAssets = (await clientAssetsRes.json()) as ClientAssetsData;
