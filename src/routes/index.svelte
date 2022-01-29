@@ -18,9 +18,9 @@
 
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import orderBy from 'lodash/orderBy';
-	import cloneDeep from 'lodash/cloneDeep';
-	import _filter from 'lodash/filter';
+	import orderBy from 'lodash-es/orderBy';
+	import cloneDeep from 'lodash-es/cloneDeep';
+	import _filter from 'lodash-es/filter';
 	import type { ItemDef as _ItemDef } from 'src/models/item-defs';
 
 	interface ItemDef extends _ItemDef {
