@@ -172,7 +172,7 @@
 		z-index: 10;
 		border-bottom: 1px solid rgba(black, 0.15);
 		padding: 1rem;
-		margin-bottom: 1rem;
+		// margin-bottom: 1rem;
 	}
 
 	.items-filter {
@@ -201,7 +201,7 @@
 		.items-table-header-row {
 			position: sticky;
 			top: 68px;
-			height: 48px;
+			height: 55px;
 			background: white;
 			z-index: 10;
 		}
