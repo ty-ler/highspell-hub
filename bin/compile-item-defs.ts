@@ -3,43 +3,9 @@ import path from 'path';
 import sharp from 'sharp';
 import _itemDefs from '../static/client-assets/defs/itemDefs.json';
 import { clientAssetsPath, ensureDirExists, itemNameToFileName } from '../lib';
+import type { ItemDef } from 'src/models/item-defs';
 
 const itemDefs = _itemDefs as ItemDef[];
-
-interface SkillAmount {
-	skill: string;
-	amount: number;
-}
-
-interface Recipe {
-	desc: string;
-	itemId: number;
-	amount: number;
-}
-
-interface ItemDef {
-	_id: number;
-	name: string;
-	description: string;
-	isNamePlural: boolean;
-	cost: number;
-	isStackable: boolean;
-	isTradeable: boolean;
-	isForMission: boolean;
-	isMembers: boolean;
-	canIOU: boolean;
-	inventoryActions: string[];
-	edibleEffects: SkillAmount[];
-	equippableEffects: SkillAmount[];
-	equippableRequirements: SkillAmount[];
-	equipmentType: string;
-	equipmentSpriteId: number;
-	equipmentSpriteSheet: string;
-	resourceProbability: number;
-	expFromObtaining: SkillAmount;
-	recipe: Recipe[];
-	metalType: string;
-}
 
 const spriteSize = 48;
 const itemsSpriteSheetPath = path.join(clientAssetsPath, 'gameAssets', 'items', 'items.png');

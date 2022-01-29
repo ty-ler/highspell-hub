@@ -16,9 +16,6 @@ interface ClientAssetsData {
 	};
 }
 
-const clientAssetsRes = await fetch('https://highspell.com:3002/assetsClient');
-const clientAssets = (await clientAssetsRes.json()) as ClientAssetsData;
-
 const ensureAssetsDirExists = (dir: string) => {
 	const _path = path.join(clientAssetsPath, dir);
 	ensureDirExists(_path);
@@ -49,6 +46,8 @@ const downloadPNG = async (url: string, dir: string, filename: string) => {
 	fs.writeFileSync(path.join(_path, `${filename}.png`), contents);
 };
 
+const clientAssetsRes = await fetch('https://highspell.com:3002/assetsClient');
+const clientAssets = (await clientAssetsRes.json()) as ClientAssetsData;
 const filesObj = clientAssets.data.files;
 
 await Promise.all(
