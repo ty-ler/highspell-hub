@@ -124,7 +124,7 @@
 
 <table class="items-table">
 	<thead>
-		<tr>
+		<tr class="items-table-header-row">
 			{#each sortables as sortable}
 				<th
 					class="items-table-column-header"
@@ -188,6 +188,14 @@
 			&:not(.no-sort) {
 				cursor: pointer;
 			}
+		}
+
+		.items-table-header-row {
+			position: sticky;
+			top: 68px;
+			height: 48px;
+			background: white;
+			z-index: 10;
 		}
 
 		.items-table-row {
