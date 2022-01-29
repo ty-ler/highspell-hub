@@ -131,12 +131,14 @@
 					class:no-sort={sortable.disableSort}
 					on:click={(e) => handleClickColumnHeader(e, sortable)}
 				>
-					<span>
-						{sortable.label}
-					</span>
-					{#if sortable.sortDirection}
-						<span>{sortable.sortDirection === 'asc' ? '▲' : '▼'}</span>
-					{/if}
+					<div class="items-table-column-header-content">
+						<span>
+							{sortable.label}
+						</span>
+						{#if sortable.sortDirection}
+							<span>{sortable.sortDirection === 'asc' ? '▲' : '▼'}</span>
+						{/if}
+					</div>
 				</th>
 			{/each}
 		</tr>
@@ -187,6 +189,12 @@
 
 			&:not(.no-sort) {
 				cursor: pointer;
+			}
+
+			.items-table-column-header-content {
+				display: flex;
+				justify-content: center;
+				align-items: center;
 			}
 		}
 
