@@ -72,7 +72,9 @@
 			if (sorted) sort(sorted, sorted.sortDirection);
 			return;
 		}
-		displayedItemDefs = _filter(_defs, (itemDef) => itemDef.name.includes(filterValue));
+		displayedItemDefs = _filter(_defs, (itemDef) =>
+			itemDef.name.toLowerCase().includes(filterValue.toLowerCase())
+		);
 
 		if (sorted) sort(sorted, sorted.sortDirection);
 	};
