@@ -1,12 +1,13 @@
 <script lang="ts">
 	import HeaderItem from './HeaderItem.svelte';
+	import { faHome, faHistory } from '@fortawesome/free-solid-svg-icons';
 </script>
 
 <div class="header">
 	<div class="brand" />
 	<div class="nav">
-		<HeaderItem href="/" icon="fas fa-home">Home</HeaderItem>
-		<HeaderItem href="caches" icon="fas fa-history">Caches</HeaderItem>
+		<HeaderItem href="/" icon={faHome}>Home</HeaderItem>
+		<HeaderItem href="caches" icon={faHistory}>Caches</HeaderItem>
 	</div>
 </div>
 
@@ -34,10 +35,12 @@
 			display: flex;
 			align-items: center;
 			gap: 1rem;
+			width: 100%;
 
 			:global {
 				.header-item {
 					display: flex;
+					justify-content: center;
 					align-items: center;
 					height: 100%;
 				}

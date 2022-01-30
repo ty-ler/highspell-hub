@@ -41,8 +41,9 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@fortawesome/fontawesome-free": "^5.15.4",
+		"@fortawesome/free-solid-svg-icons": "^5.15.4",
 		"lodash": "^4.17.21",
-		"lodash-es": "^4.17.21"
+		"lodash-es": "^4.17.21",
+		"svelte-fa": "^2.4.0"
 	}
 }

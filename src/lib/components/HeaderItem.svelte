@@ -1,8 +1,10 @@
 <script lang="ts">
 	import { page } from '$app/stores';
+	import Fa from 'svelte-fa/src/fa.svelte';
+	import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 
 	export let href: string;
-	export let icon: string;
+	export let icon: IconDefinition;
 
 	if (!href.startsWith('/')) href = ['/', href].join('');
 
@@ -12,7 +14,7 @@
 
 <a {...$$props} {href} class={`header-item ${$$props.class}`} class:active={isActive}>
 	{#if icon}
-		<i class={`header-item-icon ${icon}`} />
+		<Fa {icon} class="header-item-icon" />
 	{/if}
 	<slot />
 </a>
@@ -28,8 +30,10 @@
 			font-weight: bold;
 		}
 
-		.header-item-icon {
-			margin-right: 0.25rem;
+		:global {
+			.header-item-icon {
+				margin-right: 0.25rem;
+			}
 		}
 	}
 </style>
