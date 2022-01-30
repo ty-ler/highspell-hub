@@ -11,10 +11,14 @@
 		"lint": "prettier --ignore-path .gitignore --check --plugin-search-dir=. . && eslint --ignore-path .gitignore .",
 		"format": "prettier --ignore-path .gitignore --write --plugin-search-dir=. .",
 		"fetch-assets": "node --loader=ts-node/esm --experimental-specifier-resolution=node bin/fetch-assets.ts",
+		"cache-assets": "node --loader=ts-node/esm --experimental-specifier-resolution=node bin/cache-assets.ts",
+		"compile-caches": "node --loader=ts-node/esm --experimental-specifier-resolution=node bin/compile-caches.ts",
+		"copy-caches": "mkdir -p static/client-caches && cp -r cache/** static/client-caches",
 		"compile-item-defs": "node --loader=ts-node/esm --experimental-specifier-resolution=node bin/compile-item-defs.ts"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "next",
+		"@sveltejs/adapter-static": "^1.0.0-next.26",
 		"@sveltejs/kit": "next",
 		"@types/lodash": "^4.14.178",
 		"@types/sharp": "^0.29.5",
@@ -37,6 +41,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@fortawesome/fontawesome-free": "^5.15.4",
 		"lodash": "^4.17.21",
 		"lodash-es": "^4.17.21"
 	}

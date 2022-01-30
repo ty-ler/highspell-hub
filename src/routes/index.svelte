@@ -3,7 +3,7 @@
 
 	export const load: Load = async ({ fetch }) => {
 		try {
-			const res = await fetch(`/client-assets/item-defs/item-defs.json`);
+			const res = await fetch(`/client-caches/current/compiled/itemDefs/itemDefs.json`);
 			const itemDefs = await res.json();
 
 			return {

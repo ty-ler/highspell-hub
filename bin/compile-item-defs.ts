@@ -6,7 +6,6 @@ import { clientAssetsPath, ensureDirExists, itemNameToFileName } from '../lib';
 import type { ItemDef } from 'src/models/item-defs';
 
 const itemDefs = _itemDefs as ItemDef[];
-
 const spriteSize = 48;
 const itemsSpriteSheetPath = path.join(clientAssetsPath, 'gameAssets', 'items', 'items.png');
 const itemDefsPath = path.join(clientAssetsPath, 'item-defs');

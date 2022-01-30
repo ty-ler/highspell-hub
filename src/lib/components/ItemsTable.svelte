@@ -128,14 +128,7 @@
 	</thead>
 	<tbody>
 		{#each displayedItemDefs as itemDef}
-			<tr
-				class="items-table-row"
-				class:items-table-row-selected={selected === itemDef}
-				on:click={(e) => {
-					e.stopPropagation();
-					selected = itemDef;
-				}}
-			>
+			<tr class="items-table-row" class:items-table-row-selected={selected === itemDef}>
 				<td><img src={itemDef.icon} on:dragstart={() => false} /></td>
 				<td>{itemDef._id}</td>
 				<td>{itemDef.name}</td>
@@ -150,7 +143,7 @@
 <style lang="scss">
 	.items-filter-container {
 		position: sticky;
-		top: 0;
+		top: var(--header-height);
 		background: white;
 		z-index: 10;
 		border-bottom: 1px solid rgba(black, 0.15);
@@ -183,10 +176,11 @@
 
 		.items-table-header-row {
 			position: sticky;
-			top: 68px;
-			height: 55px;
+			top: calc(var(--header-height) + 71px);
+			height: 54px;
 			background: white;
-			z-index: 10;
+			z-index: 11;
+			box-shadow: inset 0 1px 0 rgba(black, 0.15);
 		}
 
 		.items-table-row {
@@ -195,7 +189,7 @@
 			}
 
 			&:not(.items-table-row-selected) {
-				cursor: pointer;
+				// cursor: pointer;
 			}
 
 			&.items-table-row-selected {
