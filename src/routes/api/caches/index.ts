@@ -8,11 +8,11 @@ const staticDirPath = isProduction()
 	: path.join(fs.realpathSync('.'), 'static');
 const cacheDirPath = path.join(staticDirPath, 'client-caches');
 
-console.log(fs.readdirSync(path.join(staticDirPath, '..')));
-
 type CacheVersions = string[];
 
 export const get: RequestHandler = ({ params }) => {
+	console.log(fs.readdirSync(path.join(staticDirPath, '..')));
+
 	const cacheContents = fs.readdirSync(cacheDirPath);
 	const body: CacheVersions = cacheContents;
 
