@@ -1,7 +1,0 @@
-{
-	"functions": {
-		"node/render/index.js": {
-			"includeFiles": "static/**"
-		}
-	}
-}
