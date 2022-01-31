@@ -15,7 +15,7 @@ export const get: RequestHandler = async ({ params, url }) => {
 	// const res = await fetch(`${baseUrl}/client-caches`);
 
 	const cacheContents = fs.readdirSync(staticDirPath);
-	console.log(cacheContents);
+	console.log(fs.readdirSync(path.join(staticDirPath, '___vc')));
 	const body: CacheVersions = cacheContents;
 
 	return {
