@@ -24,3 +24,12 @@ input[type='tel'],
 input[type='color'] {
 	font-size: 16px;
 }
+
+:root {
+	--app-width: 1200px;
+}
+
+.main-content {
+	max-width: var(--app-width);
+	margin: 0 auto;
+}

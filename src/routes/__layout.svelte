@@ -3,8 +3,9 @@
 </script>
 
 <Header />
-
-<slot />
+<div class="main-content">
+	<slot />
+</div>
 
 <style lang="scss">
 	:global {

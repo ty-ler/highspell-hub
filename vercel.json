@@ -1,0 +1,7 @@
+{
+	"functions": {
+		"api/node/render/index.js": {
+			"includeFiles": "static/**"
+		}
+	}
+}

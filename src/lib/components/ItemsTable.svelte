@@ -97,50 +97,57 @@
 	sort(idSortable, 'asc');
 </script>
 
-<div class="items-filter-container">
-	<input
-		class="items-filter"
-		placeholder="Filter by name"
-		on:input={(e) => handleChangeFilterField(e)}
-	/>
+<div class="items-table-host">
+	<div class="items-filter-container">
+		<input
+			class="items-filter"
+			placeholder="Filter by name"
+			on:input={(e) => handleChangeFilterField(e)}
+		/>
+	</div>
+
+	<table class="items-table">
+		<thead>
+			<tr class="items-table-header-row">
+				{#each sortables as sortable}
+					<th
+						class="items-table-column-header"
+						class:no-sort={sortable.disableSort}
+						on:click={(e) => handleClickColumnHeader(e, sortable)}
+					>
+						<div class="items-table-column-header-content">
+							<span>
+								{sortable.label}
+							</span>
+							{#if sortable.sortDirection}
+								<span>{sortable.sortDirection === 'asc' ? '▲' : '▼'}</span>
+							{/if}
+						</div>
+					</th>
+				{/each}
+			</tr>
+		</thead>
+		<tbody>
+			{#each displayedItemDefs as itemDef}
+				<tr class="items-table-row" class:items-table-row-selected={selected === itemDef}>
+					<td><img src={itemDef.icon} on:dragstart={() => false} /></td>
+					<td>{itemDef._id}</td>
+					<td>{itemDef.name}</td>
+					<td>{itemDef.description}</td>
+					<td>{itemDef.cost}</td>
+				</tr>
+			{/each}
+			<tr />
+		</tbody>
+	</table>
 </div>
 
-<table class="items-table">
-	<thead>
-		<tr class="items-table-header-row">
-			{#each sortables as sortable}
-				<th
-					class="items-table-column-header"
-					class:no-sort={sortable.disableSort}
-					on:click={(e) => handleClickColumnHeader(e, sortable)}
-				>
-					<div class="items-table-column-header-content">
-						<span>
-							{sortable.label}
-						</span>
-						{#if sortable.sortDirection}
-							<span>{sortable.sortDirection === 'asc' ? '▲' : '▼'}</span>
-						{/if}
-					</div>
-				</th>
-			{/each}
-		</tr>
-	</thead>
-	<tbody>
-		{#each displayedItemDefs as itemDef}
-			<tr class="items-table-row" class:items-table-row-selected={selected === itemDef}>
-				<td><img src={itemDef.icon} on:dragstart={() => false} /></td>
-				<td>{itemDef._id}</td>
-				<td>{itemDef.name}</td>
-				<td>{itemDef.description}</td>
-				<td>{itemDef.cost}</td>
-			</tr>
-		{/each}
-		<tr />
-	</tbody>
-</table>
-
 <style lang="scss">
+	.items-table-host {
+		// max-width: 1200px;
+		// margin: 0 auto;
+	}
+
 	.items-filter-container {
 		position: sticky;
 		top: var(--header-height);

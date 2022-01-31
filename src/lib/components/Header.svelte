@@ -7,10 +7,12 @@
 </script>
 
 <div class="header">
-	<div class="brand" />
-	<div class="nav">
-		<HeaderItem href="/" icon={faHome}>Home</HeaderItem>
-		<HeaderItem href="caches" icon={faHistory}>Caches</HeaderItem>
+	<div class="header-content">
+		<div class="brand" />
+		<div class="nav">
+			<HeaderItem href="/" icon={faHome}>Home</HeaderItem>
+			<HeaderItem href="caches" icon={faHistory}>Caches</HeaderItem>
+		</div>
 	</div>
 </div>
 
@@ -24,7 +26,7 @@
 		--corrected-header-height: calc(var(--header-height) - var(--border-size));
 
 		display: flex;
-		align-items: center;
+		justify-content: center;
 		position: sticky;
 		top: 0;
 		padding: 0 1rem;
@@ -32,6 +34,13 @@
 		max-height: var(--corrected-header-height);
 		background: darken(white, 5%);
 		border-bottom: var(--border-size) solid rgba(black, 0.15);
+
+		.header-content {
+			display: flex;
+			align-items: center;
+			max-width: var(--app-width);
+			width: 100%;
+		}
 
 		.nav {
 			align-self: stretch;
