@@ -9,7 +9,6 @@
 <div class="header">
 	<div class="brand" />
 	<div class="nav">
-		{prod}
 		<HeaderItem href="/" icon={faHome}>Home</HeaderItem>
 		<HeaderItem href="caches" icon={faHistory}>Caches</HeaderItem>
 	</div>
