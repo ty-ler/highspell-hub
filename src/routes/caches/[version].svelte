@@ -34,4 +34,4 @@
 	export let itemDefs: ItemDef[];
 </script>
 
-<ItemsTable {itemDefs} />
+<ItemsTable clientVersion={version} {itemDefs} />

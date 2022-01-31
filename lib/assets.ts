@@ -55,7 +55,7 @@ export interface GameAssets {
 
 export type ClientCacheVersion = number | 'current';
 
-export const clientAssetsPath = path.join(fs.realpathSync('.'), 'static', 'client-assets');
+export const staticCachesDirPath = path.join(fs.realpathSync('.'), 'static', 'client-caches');
 
 export const cacheDirPath = path.join(fs.realpathSync('.'), 'cache');
 

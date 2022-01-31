@@ -19,7 +19,9 @@
 		direction: SortDirection;
 	}
 
+	export let clientVersion: string;
 	export let itemDefs: ItemDef[];
+
 	let _defs: ItemDef[] = cloneDeep(itemDefs);
 
 	export let sortables: Sortable[] = [
@@ -98,12 +100,17 @@
 </script>
 
 <div class="items-table-host">
-	<div class="items-filter-container">
+	<div class="items-table-header">
 		<input
 			class="items-filter"
 			placeholder="Filter by name"
 			on:input={(e) => handleChangeFilterField(e)}
 		/>
+
+		<div class="client-version">
+			<strong>Client Version: </strong>
+			<span>{clientVersion}</span>
+		</div>
 	</div>
 
 	<table class="items-table">
@@ -148,8 +155,12 @@
 		// margin: 0 auto;
 	}
 
-	.items-filter-container {
+	.items-table-header {
 		position: sticky;
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 1rem;
 		top: var(--header-height);
 		background: white;
 		z-index: 10;

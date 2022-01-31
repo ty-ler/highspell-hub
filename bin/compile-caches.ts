@@ -2,7 +2,6 @@ import fs from 'fs';
 import path from 'path';
 import {
 	cacheDirPath,
-	clientAssetsPath,
 	ClientCacheVersion,
 	ensureDirExists,
 	getCacheVersionDirPath,

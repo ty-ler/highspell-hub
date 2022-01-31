@@ -13,7 +13,7 @@
 		"fetch-assets": "node --loader=ts-node/esm --experimental-specifier-resolution=node bin/fetch-assets.ts",
 		"cache-assets": "node --loader=ts-node/esm --experimental-specifier-resolution=node bin/cache-assets.ts",
 		"compile-caches": "node --loader=ts-node/esm --experimental-specifier-resolution=node bin/compile-caches.ts",
-		"copy-caches": "mkdir -p static/client-caches && cp -r cache/** static/client-caches",
+		"copy-caches": "node --loader=ts-node/esm --experimental-specifier-resolution=node bin/copy-caches.ts",
 		"compile-item-defs": "node --loader=ts-node/esm --experimental-specifier-resolution=node bin/compile-item-defs.ts"
 	},
 	"devDependencies": {
