@@ -1,7 +1,0 @@
-{
-	"functions": {
-		"src/routes/api/caches/index.js": {
-			"includeFiles": "client-assets/**"
-		}
-	}
-}
