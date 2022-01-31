@@ -1,6 +1,6 @@
 {
 	"functions": {
-		"api/node/render/index.js": {
+		"node/render/index.js": {
 			"includeFiles": "static/**"
 		}
 	}
