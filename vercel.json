@@ -1,6 +1,6 @@
 {
 	"functions": {
-		"/caches/index.ts": {
+		"src/routes/api/caches/index.ts": {
 			"includeFiles": "client-assets/**"
 		}
 	}
