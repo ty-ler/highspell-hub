@@ -8,7 +8,7 @@ const staticDirPath = isProduction()
 	: path.join(fs.realpathSync('.'), 'static');
 const cacheDirPath = path.join(staticDirPath, 'client-caches');
 
-console.log(fs.readdirSync(staticDirPath));
+console.log(fs.readdirSync(path.join(staticDirPath, '___vc')));
 
 type CacheVersions = string[];
 
