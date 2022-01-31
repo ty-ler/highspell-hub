@@ -1,6 +1,6 @@
 {
 	"functions": {
-		"caches/index.js": {
+		"caches/index.ts": {
 			"includeFiles": "client-assets/**"
 		}
 	}
