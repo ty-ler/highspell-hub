@@ -15,7 +15,7 @@ export const get: RequestHandler = async ({ params, url }) => {
 	// const res = await fetch(`${baseUrl}/client-caches`);
 
 	const cacheContents = fs.readdirSync(staticDirPath);
-	console.log(process.cwd());
+	console.log(fs.readdirSync(path.join(process.cwd(), 'client-caches')));
 	const body: CacheVersions = cacheContents;
 
 	return {
@@ -23,40 +23,3 @@ export const get: RequestHandler = async ({ params, url }) => {
 		body: []
 	};
 };
-
-class TreeNode {
-	public path: string;
-	public children: Array<TreeNode>;
-
-	constructor(path: string) {
-		this.path = path;
-		this.children = [];
-	}
-}
-
-function buildTree(rootPath: string) {
-	const root = new TreeNode(rootPath);
-
-	const stack = [root];
-
-	while (stack.length) {
-		const currentNode = stack.pop();
-		if (currentNode) {
-			const children = fs
-				.readdirSync(currentNode.path)
-				.filter((filename) => !filename.startsWith('.'));
-
-			for (let child of children) {
-				const childPath = `${currentNode.path}/${child}`;
-				const childNode = new TreeNode(childPath);
-				currentNode.children.push(childNode);
-
-				if (fs.statSync(childNode.path).isDirectory()) {
-					stack.push(childNode);
-				}
-			}
-		}
-	}
-
-	return root;
-}
