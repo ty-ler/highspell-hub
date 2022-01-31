@@ -1,3 +1,4 @@
+import { assets } from '$app/paths';
 import { isProduction } from '$lib/utils/env';
 import type { RequestHandler } from '@sveltejs/kit';
 import fs from 'fs';
@@ -12,10 +13,8 @@ type CacheVersions = string[];
 
 export const get: RequestHandler = async ({ params, url }) => {
 	const baseUrl = url.origin;
-	if (isProduction()) {
-		console.log(buildTree('/'));
-	}
 	// const res = await fetch(`${baseUrl}/client-caches`);
+	console.log(assets);
 
 	const cacheContents = fs.readdirSync(cacheDirPath);
 	const body: CacheVersions = cacheContents;
