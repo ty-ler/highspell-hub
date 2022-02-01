@@ -66,8 +66,6 @@
 			(def: ItemDef) => def.groundItems && def.name.toLowerCase().includes(filterValue)
 		);
 
-		console.log(displayedItemDefs);
-
 		buildMap();
 	};
 
