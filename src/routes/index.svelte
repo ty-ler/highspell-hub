@@ -18,7 +18,7 @@
 
 <script lang="ts">
 	import ItemsTable from '$lib/components/ItemsTable.svelte';
-	import type { ItemDef } from 'src/models/item-defs';
+	import type { ItemDef } from 'src/interfaces/item-defs';
 
 	export let itemDefs: ItemDef[];
 </script>

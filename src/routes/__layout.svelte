@@ -3,8 +3,10 @@
 </script>
 
 <Header />
-<div class="main-content">
-	<slot />
+<div class="main-content-container">
+	<div class="main-content">
+		<slot />
+	</div>
 </div>
 
 <style lang="scss">

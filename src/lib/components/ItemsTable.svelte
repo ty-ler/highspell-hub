@@ -1,14 +1,12 @@
 <script lang="ts">
 	import { orderBy, cloneDeep, filter as _filter } from 'lodash-es';
-	import type { ItemDef as _ItemDef } from 'src/models/item-defs';
+	import type { ItemDef } from 'src/interfaces/item-defs';
 
-	interface ItemDef extends _ItemDef {
-		icon: string;
-	}
 	type ItemDefSortKey = keyof ItemDef;
 	type SortDirection = 'asc' | 'desc';
 
 	interface Sortable {
+		name: string;
 		label: string;
 		sortKey?: ItemDefSortKey;
 		sortDirection?: SortDirection;
@@ -26,22 +24,27 @@
 
 	export let sortables: Sortable[] = [
 		{
+			name: 'icon',
 			label: 'Icon',
 			disableSort: true
 		},
 		{
+			name: 'id',
 			label: 'ID',
 			sortKey: '_id'
 		},
 		{
+			name: 'name',
 			label: 'Name',
 			sortKey: 'name'
 		},
 		{
+			name: 'description',
 			label: 'Description',
 			sortKey: 'description'
 		},
 		{
+			name: 'cost',
 			label: 'Cost',
 			sortKey: 'cost'
 		}
@@ -102,7 +105,7 @@
 <div class="items-table-host">
 	<div class="items-table-header">
 		<input
-			class="items-filter"
+			class="filter-input items-filter"
 			placeholder="Filter by name"
 			on:input={(e) => handleChangeFilterField(e)}
 		/>
@@ -113,55 +116,63 @@
 		</div>
 	</div>
 
-	<table class="items-table">
-		<thead>
-			<tr class="items-table-header-row">
-				{#each sortables as sortable}
-					<th
-						class="items-table-column-header"
-						class:no-sort={sortable.disableSort}
-						on:click={(e) => handleClickColumnHeader(e, sortable)}
-					>
-						<div class="items-table-column-header-content">
-							<span>
-								{sortable.label}
-							</span>
-							{#if sortable.sortDirection}
-								<span>{sortable.sortDirection === 'asc' ? '▲' : '▼'}</span>
-							{/if}
-						</div>
-					</th>
-				{/each}
-			</tr>
-		</thead>
-		<tbody>
-			{#each displayedItemDefs as itemDef}
-				<tr class="items-table-row" class:items-table-row-selected={selected === itemDef}>
-					<td><img src={itemDef.icon} on:dragstart={() => false} /></td>
-					<td>{itemDef._id}</td>
-					<td>{itemDef.name}</td>
-					<td>{itemDef.description}</td>
-					<td>{itemDef.cost}</td>
-				</tr>
+	<div class="items-table">
+		<div class="items-table-row items-table-header-row">
+			{#each sortables as sortable}
+				<div
+					class={`items-table-column-header cell-${sortable.name}`}
+					class:no-sort={sortable.disableSort}
+					on:click={(e) => handleClickColumnHeader(e, sortable)}
+				>
+					<div class="items-table-column-header-content">
+						<span>
+							{sortable.label}
+						</span>
+						{#if sortable.sortDirection}
+							<span>{sortable.sortDirection === 'asc' ? '▲' : '▼'}</span>
+						{/if}
+					</div>
+				</div>
 			{/each}
-			<tr />
-		</tbody>
-	</table>
+		</div>
+		<div class="items-table-body">
+			{#each displayedItemDefs as itemDef}
+				<div class="items-table-row" class:items-table-row-selected={selected === itemDef}>
+					<div class="items-table-cell cell-icon">
+						<img
+							src={itemDef.icon}
+							on:dragstart={() => false}
+							alt={itemDef.name}
+							title={itemDef.name}
+							class="cell-icon-image"
+						/>
+					</div>
+					<div class="items-table-cell cell-id">{itemDef._id}</div>
+					<div class="items-table-cell cell-name">{itemDef.name}</div>
+					<div class="items-table-cell cell-descripton">{itemDef.description}</div>
+					<div class="items-table-cell cell-cost">{itemDef.cost}</div>
+				</div>
+			{/each}
+		</div>
+	</div>
 </div>
 
 <style lang="scss">
 	.items-table-host {
 		// max-width: 1200px;
 		// margin: 0 auto;
+		display: flex;
+		flex-direction: column;
+		height: 100%;
 	}
 
 	.items-table-header {
-		position: sticky;
+		// position: sticky;
 		display: flex;
 		flex-wrap: wrap;
 		align-items: center;
 		gap: 1rem;
-		top: var(--header-height);
+		// top: var(--header-height);
 		background: white;
 		z-index: 10;
 		border-bottom: 1px solid rgba(black, 0.15);
@@ -169,16 +180,26 @@
 		// margin-bottom: 1rem;
 	}
 
+	.items-table-body {
+		padding: 0.5rem 0;
+	}
+
 	.items-filter {
-		padding: 0.5rem;
 		width: 300px;
 	}
 
 	.items-table {
+		display: flex;
+		flex-direction: column;
 		width: 100%;
 		border-spacing: 0px;
+		overflow: auto;
 
 		.items-table-column-header {
+			flex: 1;
+			display: flex;
+			justify-content: center;
+			align-self: stretch;
 			user-select: none;
 
 			&:not(.no-sort) {
@@ -193,15 +214,23 @@
 		}
 
 		.items-table-header-row {
+			display: flex;
+			align-items: center;
 			position: sticky;
-			top: calc(var(--header-height) + 71px);
-			height: 54px;
+			top: 0px;
+			font-weight: bold;
+			display: flex;
+			min-height: 54px;
 			background: white;
 			z-index: 11;
-			box-shadow: inset 0 1px 0 rgba(black, 0.15);
+			border-bottom: 1px solid rgba(black, 0.15);
 		}
 
 		.items-table-row {
+			display: flex;
+			padding: 0 1rem;
+			// grid-template-columns: 48px repeat(4, s1fr);
+
 			img {
 				user-select: none;
 			}
@@ -213,6 +242,40 @@
 			&.items-table-row-selected {
 				background: rgba(skyblue, 0.25);
 			}
+		}
+
+		.items-table-cell {
+			flex: 1;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+		.cell-icon-image {
+			min-width: 48px;
+			min-height: 48px;
+			max-width: 48px;
+			max-height: 48px;
+		}
+
+		.cell-icon {
+			display: flex;
+			align-items: center;
+			flex: 0 0 8%;
+			// max-width: 48px;
+		}
+
+		.cell-id {
+			flex: 0 0 8%;
+			// max-width: 200px;
+		}
+
+		.cell-name {
+			flex: 0 0 20%;
+		}
+
+		.cell-cost {
+			max-width: 175px;
 		}
 
 		td {

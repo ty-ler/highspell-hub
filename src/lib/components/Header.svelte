@@ -1,6 +1,6 @@
 <script lang="ts">
 	import HeaderItem from './HeaderItem.svelte';
-	import { faHome, faHistory } from '@fortawesome/free-solid-svg-icons';
+	import { faHome, faHistory, faMap, faMapMarked } from '@fortawesome/free-solid-svg-icons';
 	import { isProduction } from '$lib/utils/env';
 
 	export const prod = isProduction();
@@ -11,6 +11,7 @@
 		<div class="brand" />
 		<div class="nav">
 			<HeaderItem href="/" icon={faHome}>Home</HeaderItem>
+			<HeaderItem href="map" icon={faMapMarked}>Map</HeaderItem>
 			<HeaderItem href="caches" icon={faHistory}>Caches</HeaderItem>
 		</div>
 	</div>
@@ -27,7 +28,6 @@
 
 		display: flex;
 		justify-content: center;
-		position: sticky;
 		top: 0;
 		padding: 0 1rem;
 		min-height: var(--corrected-header-height);

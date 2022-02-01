@@ -3,7 +3,7 @@
 
 	import type { Load } from '@sveltejs/kit';
 	import type { ClientCacheVersion } from 'lib';
-	import type { ItemDef } from 'src/models/item-defs';
+	import type { ItemDef } from 'src/interfaces/item-defs';
 
 	export const load: Load = async ({ params, fetch }) => {
 		const version = params.version as ClientCacheVersion;
