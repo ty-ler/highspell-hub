@@ -115,25 +115,34 @@
 	};
 
 	const buildMap = () => {
-		const svg = d3.selectAll('#map-svg').call(
-			d3.zoom().on('zoom', (e) => {
-				zoomTransform = e.transform;
-
-				console.log(e);
-
-				svg.attr('transform', e.transform);
-				// mapImage.style.transform = e.transform;
-				// mapImageDetails.style.transform = e.transform;
-
-				console.log(mapImageDetails.style.transform);
-				// d3.select(mapImage).style('transform', e.transform);
-				// d3.select(mapImageDetails).style('transform', e.transform);
-			})
-		);
+		const svg = d3.selectAll('#map-svg');
 
 		svg.selectAll('*').remove();
 
-		const group = svg.append('g');
+		const containerGroup = svg.append('g');
+		const nodeGroup = containerGroup.append('g');
+
+		nodeGroup
+			.append('svg:image')
+			.attr('x', -9)
+			.attr('y', -12)
+			.attr('width', 20)
+			.attr('height', 24)
+			.attr('xlink:href', `client-caches/${version}/gameAssets/earthOverworldMinimap.png`);
+
+		svg.call(
+			d3.zoom().on('zoom', (e) => {
+				const transform = e.transform;
+				const scale = transform.k;
+				const translateX = transform.x;
+				const translateY = transform.y;
+
+				// zoomTransform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+				zoomTransform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+
+				console.log(e);
+			})
+		);
 
 		svg.attr('width', canvasWidth).attr('height', canvasHeight);
 
@@ -143,7 +152,11 @@
 				// console.log(def);
 				// if (idx !== 0) return;
 				// console.log(def.groundItems.length);
-				const circleGroup = group.selectAll('#map-svg').data(def.groundItems).enter().append('g');
+				const circleGroup = nodeGroup
+					.selectAll('#map-svg')
+					.data(def.groundItems)
+					.enter()
+					.append('g');
 
 				circleGroup
 					.append('circle')
@@ -215,21 +228,21 @@
 			/>
 			<label class="no-select" for="coordinates-toggle">Show Coordinates</label>
 		</div>
+		{zoomTransform}
 	</div>
 	<div class="map-scroll-container">
-		{zoomTransform}
 		<div
 			id="map-container"
-			style="--canvas-width: {canvasWidth}px; --canvas-height: {canvasHeight}px;"
+			style="--canvas-width: {canvasWidth}px; --canvas-height: {canvasHeight}px; --zoom-transform: {zoomTransform};"
 		>
+			<div class="map-axis axis-v-min">-512</div>
+			<div class="map-axis axis-v-max">512</div>
+			<div class="map-axis axis-h-min">-512</div>
+			<div class="map-axis axis-h-max">512</div>
 			<svg id="map-svg" />
 			<!-- svelte-ignore a11y-missing-attribute -->
 			<img id="map-details" src="client-caches/{version}/gameAssets/earthOverworldMinimap.png" />
-			<img
-				id="map-image"
-				src="client-caches/{version}/gameAssets/earthOverworldMap.png"
-				style:transform={zoomTransform}
-			/>
+			<img id="map-image" src="client-caches/{version}/gameAssets/earthOverworldMap.png" />
 		</div>
 	</div>
 </div>
@@ -261,6 +274,8 @@
 
 	.map-scroll-container {
 		display: flex;
+		justify-content: center;
+		width: 100%;
 		height: 100%;
 		overflow: auto;
 	}
@@ -275,6 +290,36 @@
 		overflow: hidden;
 		user-select: none;
 
+		.map-axis {
+			position: absolute;
+			color: red;
+			font-weight: bold;
+
+			&.axis-v-min {
+				top: 0;
+				left: 50%;
+				transform: translateY(-50%);
+			}
+
+			&.axis-v-max {
+				bottom: 0;
+				left: 50%;
+				transform: translateY(-50%);
+			}
+
+			&.axis-h-min {
+				top: 50%;
+				left: 0;
+				transform: translateY(-50%);
+			}
+
+			&.axis-h-max {
+				top: 50%;
+				right: 0;
+				transform: translateY(-50%);
+			}
+		}
+
 		#map-details,
 		#map-svg {
 			position: absolute;
@@ -284,7 +329,9 @@
 
 		#map-image,
 		#map-details {
+			transform: var(--zoom-transform);
 			pointer-events: none;
+			visibility: hidden;
 		}
 
 		#map-image {
