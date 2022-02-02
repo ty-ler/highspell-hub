@@ -23,6 +23,8 @@
 	import { filter } from 'lodash-es';
 	import type { ClientCacheVersion } from 'lib';
 	import type { GroundItem } from 'src/interfaces/ground-items';
+	import { map } from 'lodash';
+	import { zoom } from 'd3';
 
 	interface Coordinates {
 		width: number;
@@ -34,23 +36,33 @@
 
 	const itemDefsWithGroundItems = () => [...itemDefs?.filter((def) => !!def.groundItems)];
 
+	const cacheShowCoordsKey = 'map-show-coordinates';
+	const cacheShowCoords = (showCoords: boolean) => {
+		localStorage.setItem(cacheShowCoordsKey, JSON.stringify(showCoords));
+	};
+
+	const getCachedShowCoords = () => {
+		try {
+			return JSON.parse(localStorage.getItem(cacheShowCoordsKey)) || false;
+		} catch (e) {
+			return false;
+		}
+	};
+
 	let displayedItemDefs: ItemDef[] = itemDefsWithGroundItems();
-	let showCoordinates: boolean = false;
+	let showCoordinates: boolean = getCachedShowCoords();
 
 	let canvasWidth: number;
 	let canvasHeight: number;
 
+	let mapContainer: HTMLElement;
+	let mapImage: HTMLImageElement;
+	let mapImageDetails: HTMLImageElement;
+
 	let _canvas: HTMLCanvasElement;
 	let _context: CanvasRenderingContext2D;
 
-	const getTextWidth = (text: string, fontSize: number, fontFace: string) => {
-		_context.font = fontSize + 'px ' + fontFace;
-		return _context.measureText(text).width;
-	};
-
-	const worldToPixel = (value: number, maxSize: number): number => {
-		return maxSize - value - maxSize / 2;
-	};
+	let zoomTransform: string;
 
 	const handleChangeItemFilterField = (e: Event) => {
 		const inputElement = e.target as HTMLInputElement;
@@ -73,8 +85,14 @@
 		const checkboxElement = e.target as HTMLInputElement;
 		const checked = checkboxElement.checked;
 		showCoordinates = checked;
+		cacheShowCoords(showCoordinates);
 
 		buildMap();
+	};
+
+	const handleResize = (e: Event) => {
+		buildMap();
+		console.log(e);
 	};
 
 	const groundItemName = (itemDef: ItemDef, groundItem: GroundItem) => {
@@ -83,8 +101,35 @@
 		return name;
 	};
 
+	const getTextWidth = (text: string, fontSize: number, fontFace: string) => {
+		_context.font = fontSize + 'px ' + fontFace;
+		return _context.measureText(text).width;
+	};
+
+	const worldToPixel = (value: number, maxSize: number, offset: number = 0): number => {
+		return maxSize - value - maxSize / 2 + offset;
+
+		const ret: number = value / maxSize;
+		console.log(ret);
+		return ret;
+	};
+
 	const buildMap = () => {
-		const svg = d3.selectAll('#map-svg');
+		const svg = d3.selectAll('#map-svg').call(
+			d3.zoom().on('zoom', (e) => {
+				zoomTransform = e.transform;
+
+				console.log(e);
+
+				svg.attr('transform', e.transform);
+				// mapImage.style.transform = e.transform;
+				// mapImageDetails.style.transform = e.transform;
+
+				console.log(mapImageDetails.style.transform);
+				// d3.select(mapImage).style('transform', e.transform);
+				// d3.select(mapImageDetails).style('transform', e.transform);
+			})
+		);
 
 		svg.selectAll('*').remove();
 
@@ -92,45 +137,54 @@
 
 		svg.attr('width', canvasWidth).attr('height', canvasHeight);
 
-		displayedItemDefs.map((def) => {
-			const circleGroup = group.selectAll('#map-svg').data(def.groundItems).enter().append('g');
+		displayedItemDefs
+			// .filter((def) => def.name === 'copper ore')
+			.map((def, idx) => {
+				// console.log(def);
+				// if (idx !== 0) return;
+				// console.log(def.groundItems.length);
+				const circleGroup = group.selectAll('#map-svg').data(def.groundItems).enter().append('g');
 
-			circleGroup
-				.append('circle')
-				.attr('cx', (d) => {
-					return worldToPixel(d.x - 10, canvasWidth);
-				})
-				.attr('cy', (d) => {
-					return worldToPixel(d.y, canvasHeight);
-				})
-				.attr('r', 1)
-				.style('fill', 'red');
-			// .style('stroke', 'red');
+				circleGroup
+					.append('circle')
+					.attr('cx', (d) => {
+						// console.log(def.name, 'x: ');
+						return worldToPixel(d.x - 10, canvasWidth);
+					})
+					.attr('cy', (d) => {
+						// console.log(def.name, 'y: ');
+						return worldToPixel(d.y, canvasHeight);
+					})
+					.attr('r', 1)
+					.style('fill', 'red');
+				// .style('stroke', 'red');
 
-			circleGroup
-				.append('text')
-				.text((d) => groundItemName(def, d))
-				.attr('fill', 'white')
-				.attr('font-size', '16px')
-				.attr('dx', (d) => {
-					return (
-						worldToPixel(d.x - 10, canvasWidth) -
-						getTextWidth(groundItemName(def, d), 16, 'Arial') / 2
-					);
-				})
-				.attr('dy', (d) => {
-					return worldToPixel(d.y, canvasHeight);
-				});
-		});
+				circleGroup
+					.append('text')
+					.text((d) => groundItemName(def, d))
+					.attr('fill', 'white')
+					.attr('font-size', '16px')
+					.attr('dx', (d) => {
+						return (
+							worldToPixel(d.x - 10, canvasWidth) -
+							getTextWidth(groundItemName(def, d), 16, 'Arial') / 2
+						);
+					})
+					.attr('dy', (d) => {
+						return worldToPixel(d.y, canvasHeight);
+					});
+			});
 	};
 
 	onMount(() => {
 		_canvas = document.createElement('canvas');
 		_context = _canvas.getContext('2d');
 
-		const mapContainer = document.getElementById('map-container');
-		const mapImage = document.getElementById('map-image');
-		const mapCanvas = document.getElementById('map-canvas') as HTMLCanvasElement;
+		mapContainer = document.getElementById('map-container');
+		mapImage = document.getElementById('map-image') as HTMLImageElement;
+		mapImageDetails = document.getElementById('map-details') as HTMLImageElement;
+
+		console.log(mapContainer, mapImage, mapImageDetails);
 
 		// const mapContext = mapCanvas.getContext('2d');
 
@@ -140,6 +194,8 @@
 		buildMap();
 	});
 </script>
+
+<svelte:window on:resize={(e) => handleResize(e)} />
 
 <!-- <div class="map-host"> -->
 <div class="map-host-content">
@@ -154,19 +210,27 @@
 				type="checkbox"
 				id="coordinates-toggle"
 				name="coordinates-toggle"
+				checked={showCoordinates}
 				on:change={(e) => handleChangeShowCoordinates(e)}
 			/>
 			<label class="no-select" for="coordinates-toggle">Show Coordinates</label>
 		</div>
 	</div>
-	<div
-		id="map-container"
-		style="--canvas-width: {canvasWidth}px; --canvas-height: {canvasHeight}px;"
-	>
-		<svg id="map-svg" />
-		<!-- svelte-ignore a11y-missing-attribute -->
-		<img id="map-details" src="client-caches/{version}/gameAssets/earthOverworldMinimap.png" />
-		<img id="map-image" src="client-caches/{version}/gameAssets/earthOverworldMap.png" />
+	<div class="map-scroll-container">
+		{zoomTransform}
+		<div
+			id="map-container"
+			style="--canvas-width: {canvasWidth}px; --canvas-height: {canvasHeight}px;"
+		>
+			<svg id="map-svg" />
+			<!-- svelte-ignore a11y-missing-attribute -->
+			<img id="map-details" src="client-caches/{version}/gameAssets/earthOverworldMinimap.png" />
+			<img
+				id="map-image"
+				src="client-caches/{version}/gameAssets/earthOverworldMap.png"
+				style:transform={zoomTransform}
+			/>
+		</div>
 	</div>
 </div>
 
@@ -195,6 +259,12 @@
 		padding: 1rem;
 	}
 
+	.map-scroll-container {
+		display: flex;
+		height: 100%;
+		overflow: auto;
+	}
+
 	#map-container {
 		min-width: var(--canvas-width);
 		min-height: var(--canvas-height);
@@ -206,11 +276,15 @@
 		user-select: none;
 
 		#map-details,
-		#map-svg,
-		#map-canvas {
+		#map-svg {
 			position: absolute;
 			top: 0;
 			left: 0;
+		}
+
+		#map-image,
+		#map-details {
+			pointer-events: none;
 		}
 
 		#map-image {
