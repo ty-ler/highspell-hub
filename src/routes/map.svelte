@@ -23,9 +23,7 @@
 	import { filter } from 'lodash-es';
 	import type { ClientCacheVersion } from 'lib';
 	import type { GroundItem } from 'src/interfaces/ground-items';
-	import { map, transform } from 'lodash';
-	import { select, zoom } from 'd3';
-	import { select_option } from 'svelte/internal';
+	import { locations } from '$lib/game/locations';
 
 	interface Coordinates {
 		width: number;
@@ -55,9 +53,6 @@
 	let displayedItemDefs: ItemDef[] = itemDefsWithGroundItems();
 	let showCoordinates: boolean = getCachedShowCoords();
 
-	let canvasWidth: number;
-	let canvasHeight: number;
-
 	let mapContainer: HTMLElement;
 	let mapImage: HTMLImageElement;
 	let mapImageDetails: HTMLImageElement;
@@ -65,7 +60,7 @@
 	let _canvas: HTMLCanvasElement;
 	let _context: CanvasRenderingContext2D;
 
-	let filterValue: string = 'string,bronze longsword';
+	let filterValue: string = '';
 	let zoomTransform: any;
 	let debug: boolean = false;
 
@@ -86,9 +81,6 @@
 	};
 
 	const handleResize = (e: Event) => {
-		// canvasWidth = mapContainer.clientWidth;
-		// canvasHeight = mapContainer.clientHeight;
-
 		buildMap();
 	};
 
@@ -114,10 +106,13 @@
 	};
 
 	let scale: number = 1;
-	let maxScale: number = 1;
-	let maxFontSize: number = 16;
-	let minFontSize: number = 6.5;
+	// let maxScale: number = 1;
+	let minFontSize: number = 4;
+	let maxFontSize: number = 12;
+	let minDotRadius: number = 0.5;
+	let maxDotRadius: number = 1;
 	let fontSize: number = maxFontSize;
+	let dotRadius: number = maxDotRadius;
 
 	const getTextWidth = (text: string, fontSize: number, fontFace: string) => {
 		_context.font = fontSize + 'px ' + fontFace;
@@ -129,11 +124,15 @@
 		return Math.abs(value + (reverse ? center * -1 : center));
 	};
 
-	function transform(t) {
-		return function (d: GroundItem) {
-			return `translate(${t.apply([d.x, d.y])})`;
-		};
-	}
+	const overlapping = (rect1: DOMRect, rect2: DOMRect) => {
+		const padding = 0;
+		return !(
+			rect1.left >= rect2.right ||
+			rect1.top >= rect2.bottom ||
+			rect1.right <= rect2.left ||
+			rect1.bottom <= rect2.top
+		);
+	};
 
 	const groundItemName = (itemDef: ItemDef, groundItem: GroundItem) => {
 		let name = `${itemDef.name}${groundItem.amount > 1 ? ` (${groundItem.amount})` : ''}`;
@@ -148,19 +147,19 @@
 	};
 
 	const buildMap = () => {
-		const svg = d3.selectAll('#map-svg').attr('viewBox', `0 0 ${canvasWidth} ${canvasHeight}`);
+		const svg = d3.selectAll('#map-svg').attr('viewBox', `0 0 ${MAP_SIZE} ${MAP_SIZE}`);
 		svg.selectAll('*').remove();
 
-		const containerGroup = svg.append('g');
+		const mapElementsGroup = svg.append('g').attr('id', 'map-elements-group');
 
-		containerGroup
+		mapElementsGroup
 			.append('svg:image')
 			.attr('id', 'svg-map-image')
 			.attr('width', '100%')
 			.attr('height', '100%')
 			.attr('xlink:href', `client-caches/${version}/gameAssets/earthOverworldMap.png`);
 
-		containerGroup
+		mapElementsGroup
 			.append('svg:image')
 			.attr('id', 'svg-map-details')
 			.attr('width', '100%')
@@ -168,21 +167,54 @@
 			.attr('xlink:href', `client-caches/${version}/gameAssets/earthOverworldMinimap.png`);
 
 		if (zoomTransform) {
-			containerGroup.attr('transform', zoomTransform);
+			mapElementsGroup.attr('transform', zoomTransform);
 		}
 
-		const nodeGroup = containerGroup.append('g');
+		const groundItemsGroup = mapElementsGroup.append('g').attr('id', 'ground-items-group');
 
-		const groups = displayedItemDefs.map((def, idx) => {
-			const circleGroup = nodeGroup.selectAll('#map-svg').data(def.groundItems).join('g');
+		const correctOverlappingText = (
+			texts: d3.Selection<SVGTextElement, GroundItem, SVGGElement, unknown>
+		) => {
+			texts.each(function (di) {
+				const that = this;
+				const thatSelect = d3.select(that);
+				const a = this.getBoundingClientRect();
 
-			circleGroup
+				let overlapped = false;
+
+				texts.each(function (dj) {
+					// if (overlapped) return;
+
+					if (this !== that) {
+						const thisSelect = d3.select(this);
+						const b = this.getBoundingClientRect();
+
+						if (overlapping(a, b)) {
+							overlapped = true;
+						} else if (thatSelect.style('display') === 'none') {
+							// thatSelect.style('display', 'block');
+							// overlapped = false;
+
+							return;
+						}
+					}
+				});
+
+				// if (overlapped) {
+				// 	thatSelect.style('display', 'none');
+				// }
+			});
+		};
+
+		const groundItemGroups = displayedItemDefs.map((def, idx) => {
+			const circleGroup = groundItemsGroup.selectAll('#map-svg').data(def.groundItems).join('g');
+
+			const circles = circleGroup
 				.append('circle')
 				.attr('cx', (d) => worldToPixel(d.x, false))
 				.attr('cy', (d) => worldToPixel(d.y, true))
-				.attr('r', 1)
+				.attr('r', dotRadius)
 				.style('fill', 'red');
-			// .style('stroke', 'red');
 
 			const texts = circleGroup
 				.append('text')
@@ -194,45 +226,67 @@
 					(d) =>
 						worldToPixel(d.x, false) - getTextWidth(groundItemName(def, d), fontSize, 'Arial') / 2
 				)
-				.attr('dy', (d) => worldToPixel(d.y + 3, true));
+				.attr('dy', (d) => worldToPixel(d.y + 2, true));
+
+			correctOverlappingText(texts);
 
 			return {
+				circles,
 				texts,
 				def
 			};
 		});
 
+		const locationsGroup = mapElementsGroup.append('g').attr('id', 'locations-group');
+
+		const mapLocation = locationsGroup
+			.selectAll('text')
+			.data(locations)
+			.join('text')
+			.text((d) => d.name)
+			.attr('dx', (d) => d3.randomInt(MAP_SIZE)() - getTextWidth(d.name, 16, 'Arial') / 2)
+			.attr('dy', d3.randomInt(MAP_SIZE));
+
 		const worldTopLeft: [number, number] = [0, 0];
-		const worldBottomRight: [number, number] = [canvasWidth, canvasHeight];
+		const worldBottomRight: [number, number] = [MAP_SIZE, MAP_SIZE];
 
-		svg.call(
-			d3
-				.zoom()
-				.scaleExtent([1, 5])
-				.translateExtent([worldTopLeft, worldBottomRight])
-				.on('zoom', (e) => {
-					const trans = e.transform;
-					zoomTransform = trans;
-					scale = trans.k;
+		const maxScaleExtent = 6;
 
-					containerGroup.attr('transform', trans);
-					groups.map((group) => {
-						const { def, texts } = group;
-						if (scale > maxScale) {
-							fontSize = Math.max(maxFontSize / scale, minFontSize);
-							texts.attr('font-size', `${fontSize}px`);
-							texts.attr(
-								'dx',
-								(d) =>
-									worldToPixel(d.x, false) -
-									getTextWidth(groundItemName(def, d), fontSize, 'Arial') / 2
-							);
-						} else {
-							texts.attr('font-size', `${maxFontSize}px`);
-						}
+		const zoom = d3
+			.zoom()
+			.scaleExtent([1, maxScaleExtent])
+			.translateExtent([worldTopLeft, worldBottomRight])
+			.on('zoom', (e) => {
+				const { transform, sourceEvent } = e;
+
+				zoomTransform = transform;
+				scale = transform.k;
+
+				mapElementsGroup.attr('transform', transform);
+
+				if (!sourceEvent.buttons) {
+					groundItemGroups.map((group) => {
+						const { def, texts, circles } = group;
+
+						fontSize = Math.max(maxFontSize / scale, minFontSize);
+						dotRadius = Math.max(maxDotRadius / scale, minDotRadius);
+
+						texts.attr('font-size', `${fontSize}px`);
+						texts.attr(
+							'dx',
+							(d) =>
+								worldToPixel(d.x, false) -
+								getTextWidth(groundItemName(def, d), fontSize, 'Arial') / 2
+						);
+
+						correctOverlappingText(texts);
+
+						circles.attr('r', dotRadius);
 					});
-				})
-		);
+				}
+			});
+
+		svg.call(zoom);
 	};
 
 	onMount(() => {
@@ -243,8 +297,8 @@
 		mapImage = document.getElementById('map-image') as HTMLImageElement;
 		mapImageDetails = document.getElementById('map-details') as HTMLImageElement;
 
-		canvasWidth = mapImage.clientWidth;
-		canvasHeight = mapImage.clientHeight;
+		// canvasWidth = mapImage.clientWidth;
+		// canvasHeight = mapImage.clientHeight;
 
 		buildMap();
 
@@ -277,7 +331,6 @@
 	<div class="map-scroll-container">
 		<div
 			id="map-container"
-			style="--canvas-width: {canvasWidth}px; --canvas-height: {canvasHeight}px;"
 			on:scroll={(e) => e.preventDefault()}
 			on:wheel={(e) => e.preventDefault()}
 		>
@@ -308,7 +361,7 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		// overflow: auto;
+		// overflow-x: auto;
 		height: 100%;
 	}
 
@@ -318,9 +371,9 @@
 		gap: 1rem;
 		align-items: center;
 		align-self: flex-start;
-		position: sticky;
-		top: 0;
-		width: 100%;
+		// position: sticky;
+		// top: 0;
+		// width: 100%;
 		z-index: 10;
 		background: white;
 		padding: 1rem;
@@ -331,6 +384,8 @@
 		justify-content: center;
 		width: 100%;
 		height: 100%;
+		min-height: 0;
+		padding-bottom: 1rem;
 		// overflow: auto;
 	}
 
@@ -353,6 +408,7 @@
 		// max-width: var(--canvas-width);
 		// max-height: var(--canvas-height);
 
+		display: flex;
 		position: relative;
 		overflow: hidden;
 		user-select: none;
@@ -361,6 +417,7 @@
 		background-image: linear-gradient(to right, grey 1px, rgba(black, 0.025) 1px),
 			linear-gradient(to bottom, grey 1px, rgba(black, 0.025) 1px);
 		background-position: center;
+		display: flex;
 
 		cursor: grab;
 
