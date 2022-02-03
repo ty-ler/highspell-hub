@@ -23,7 +23,7 @@
 	import { filter } from 'lodash-es';
 	import type { ClientCacheVersion } from 'lib';
 	import type { GroundItem } from 'src/interfaces/ground-items';
-	import { map } from 'lodash';
+	import { map, transform } from 'lodash';
 	import { zoom } from 'd3';
 
 	interface Coordinates {
@@ -62,23 +62,15 @@
 	let _canvas: HTMLCanvasElement;
 	let _context: CanvasRenderingContext2D;
 
-	let zoomTransform: string;
+	let filterValue: string = 'string,bronze longsword';
+	let zoomTransform: any;
+	let debug: boolean = false;
 
-	const handleChangeItemFilterField = (e: Event) => {
-		const inputElement = e.target as HTMLInputElement;
-		const filterValue = inputElement.value.toLowerCase();
-		if (!filterValue) {
-			displayedItemDefs = itemDefsWithGroundItems();
-			buildMap();
-			return;
-		}
+	const handleChangeItemFilterField = (event: Event) => {
+		const value = (event.target as HTMLInputElement).value;
+		filterValue = value.toLowerCase();
 
-		displayedItemDefs = filter(
-			itemDefsWithGroundItems(),
-			(def: ItemDef) => def.groundItems && def.name.toLowerCase().includes(filterValue)
-		);
-
-		buildMap();
+		filterMapItems(filterValue);
 	};
 
 	const handleChangeShowCoordinates = (e: Event) => {
@@ -92,13 +84,27 @@
 
 	const handleResize = (e: Event) => {
 		buildMap();
-		console.log(e);
 	};
 
-	const groundItemName = (itemDef: ItemDef, groundItem: GroundItem) => {
-		let name = `${itemDef.name}${groundItem.amount > 1 ? ` (${groundItem.amount})` : ''}`;
-		if (showCoordinates) name += ` (x: ${groundItem.x}, y: ${groundItem.y})`;
-		return name;
+	const filterMapItems = (value: string) => {
+		if (!value) {
+			displayedItemDefs = itemDefsWithGroundItems();
+			buildMap();
+			return;
+		}
+
+		const filterItems = value.split(',').map((v) => v.trim());
+		const singleItem = filterItems.length === 1;
+
+		displayedItemDefs = filter(itemDefsWithGroundItems(), (def: ItemDef) => {
+			const name = def.name.toLowerCase();
+
+			return (
+				def.groundItems && (singleItem ? name.includes(filterItems[0]) : filterItems.includes(name))
+			);
+		});
+
+		buildMap();
 	};
 
 	const getTextWidth = (text: string, fontSize: number, fontFace: string) => {
@@ -106,12 +112,30 @@
 		return _context.measureText(text).width;
 	};
 
-	const worldToPixel = (value: number, maxSize: number, offset: number = 0): number => {
-		return maxSize - value - maxSize / 2 + offset;
+	const worldToPixel = (
+		value: number,
+		maxSize: number,
+		reverse: boolean,
+		name?: string
+	): number => {
+		const center = maxSize / 2;
 
-		const ret: number = value / maxSize;
-		console.log(ret);
-		return ret;
+		// return center - Math.abs(value);
+
+		return Math.abs(value + (reverse ? center * -1 : center));
+	};
+
+	const groundItemName = (itemDef: ItemDef, groundItem: GroundItem) => {
+		let name = `${itemDef.name}${groundItem.amount > 1 ? ` (${groundItem.amount})` : ''}`;
+
+		if (showCoordinates) name += ` (x: ${groundItem.x}, y: ${groundItem.y})`;
+		if (debug)
+			name += ` ([pixel space] x: ${worldToPixel(
+				groundItem.x,
+				canvasWidth,
+				false
+			)}, y: ${worldToPixel(groundItem.y, canvasHeight, true)})`;
+		return name;
 	};
 
 	const buildMap = () => {
@@ -120,73 +144,68 @@
 		svg.selectAll('*').remove();
 
 		const containerGroup = svg.append('g');
-		const nodeGroup = containerGroup.append('g');
 
-		nodeGroup
+		containerGroup
 			.append('svg:image')
-			.attr('x', -9)
-			.attr('y', -12)
-			.attr('width', 20)
-			.attr('height', 24)
+			.attr('id', 'svg-map-image')
+			.attr('width', '100%')
+			.attr('height', '100%')
+			.attr('xlink:href', `client-caches/${version}/gameAssets/earthOverworldMap.png`);
+
+		containerGroup
+			.append('svg:image')
+			.attr('id', 'svg-map-details')
+			.attr('width', '100%')
+			.attr('height', '100%')
 			.attr('xlink:href', `client-caches/${version}/gameAssets/earthOverworldMinimap.png`);
 
+		if (zoomTransform) {
+			containerGroup.attr('transform', zoomTransform);
+		}
+
+		const worldTopLeft: [number, number] = [0, 0];
+		const worldBottomRight: [number, number] = [canvasWidth, canvasHeight];
+
 		svg.call(
-			d3.zoom().on('zoom', (e) => {
-				const transform = e.transform;
-				const scale = transform.k;
-				const translateX = transform.x;
-				const translateY = transform.y;
-
-				// zoomTransform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
-				zoomTransform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
-
-				console.log(e);
-			})
+			d3
+				.zoom()
+				.scaleExtent([1, 5])
+				.translateExtent([worldTopLeft, worldBottomRight])
+				.on('zoom', (e) => {
+					const transform = e.transform;
+					zoomTransform = transform;
+					containerGroup.attr('transform', transform);
+				})
 		);
 
 		svg.attr('width', canvasWidth).attr('height', canvasHeight);
 
-		displayedItemDefs
-			// .filter((def) => def.name === 'copper ore')
-			.map((def, idx) => {
-				// console.log(def);
-				// if (idx !== 0) return;
-				// console.log(def.groundItems.length);
-				const circleGroup = nodeGroup
-					.selectAll('#map-svg')
-					.data(def.groundItems)
-					.enter()
-					.append('g');
+		const nodeGroup = containerGroup.append('g');
 
-				circleGroup
-					.append('circle')
-					.attr('cx', (d) => {
-						// console.log(def.name, 'x: ');
-						return worldToPixel(d.x - 10, canvasWidth);
-					})
-					.attr('cy', (d) => {
-						// console.log(def.name, 'y: ');
-						return worldToPixel(d.y, canvasHeight);
-					})
-					.attr('r', 1)
-					.style('fill', 'red');
-				// .style('stroke', 'red');
+		displayedItemDefs.map((def, idx) => {
+			const circleGroup = nodeGroup.selectAll('#map-svg').data(def.groundItems).enter().append('g');
 
-				circleGroup
-					.append('text')
-					.text((d) => groundItemName(def, d))
-					.attr('fill', 'white')
-					.attr('font-size', '16px')
-					.attr('dx', (d) => {
-						return (
-							worldToPixel(d.x - 10, canvasWidth) -
-							getTextWidth(groundItemName(def, d), 16, 'Arial') / 2
-						);
-					})
-					.attr('dy', (d) => {
-						return worldToPixel(d.y, canvasHeight);
-					});
-			});
+			circleGroup
+				.append('circle')
+				.attr('cx', (d) => worldToPixel(d.x, canvasWidth, false, `${def.name} x: `))
+				.attr('cy', (d) => worldToPixel(d.y, canvasHeight, true, `${def.name} y: `))
+				.attr('r', 1)
+				.style('fill', 'red');
+			// .style('stroke', 'red');
+
+			circleGroup
+				.append('text')
+				.text((d) => groundItemName(def, d))
+				.attr('fill', 'white')
+				.attr('font-size', '16px')
+				.attr(
+					'dx',
+					(d) =>
+						worldToPixel(d.x, canvasWidth, false) -
+						getTextWidth(groundItemName(def, d), 16, 'Arial') / 2
+				)
+				.attr('dy', (d) => worldToPixel(d.y + 3, canvasHeight, true));
+		});
 	};
 
 	onMount(() => {
@@ -197,14 +216,12 @@
 		mapImage = document.getElementById('map-image') as HTMLImageElement;
 		mapImageDetails = document.getElementById('map-details') as HTMLImageElement;
 
-		console.log(mapContainer, mapImage, mapImageDetails);
-
-		// const mapContext = mapCanvas.getContext('2d');
-
 		canvasWidth = mapImage.clientWidth;
 		canvasHeight = mapImage.clientHeight;
 
 		buildMap();
+
+		filterMapItems(filterValue);
 	});
 </script>
 
@@ -216,6 +233,7 @@
 		<input
 			placeholder="Filter by item name"
 			class="filter-input"
+			value={filterValue}
 			on:input={(e) => handleChangeItemFilterField(e)}
 		/>
 		<div class="checkbox-container">
@@ -228,17 +246,21 @@
 			/>
 			<label class="no-select" for="coordinates-toggle">Show Coordinates</label>
 		</div>
-		{zoomTransform}
 	</div>
 	<div class="map-scroll-container">
 		<div
 			id="map-container"
-			style="--canvas-width: {canvasWidth}px; --canvas-height: {canvasHeight}px; --zoom-transform: {zoomTransform};"
+			style="--canvas-width: {canvasWidth}px; --canvas-height: {canvasHeight}px;"
+			on:scroll={(e) => e.preventDefault()}
+			on:wheel={(e) => e.preventDefault()}
 		>
-			<div class="map-axis axis-v-min">-512</div>
-			<div class="map-axis axis-v-max">512</div>
-			<div class="map-axis axis-h-min">-512</div>
-			<div class="map-axis axis-h-max">512</div>
+			{#if debug}
+				<!-- <div class="debug-circle" /> -->
+				<div class="map-axis axis-v-min">512 (top: 0px)</div>
+				<div class="map-axis axis-v-max">-512 (top: 1024px)</div>
+				<div class="map-axis axis-h-min">-512 (left: 0px)</div>
+				<div class="map-axis axis-h-max">512 (left: 1024)</div>
+			{/if}
 			<svg id="map-svg" />
 			<!-- svelte-ignore a11y-missing-attribute -->
 			<img id="map-details" src="client-caches/{version}/gameAssets/earthOverworldMinimap.png" />
@@ -280,6 +302,19 @@
 		overflow: auto;
 	}
 
+	.debug-circle {
+		--debug-circle-size: 1px;
+
+		position: absolute;
+		border-radius: 50%;
+		min-width: var(--debug-circle-size);
+		min-height: var(--debug-circle-size);
+		background: violet;
+		top: calc(549px - (var(--debug-circle-size) / 2));
+		left: calc(679px - (var(--debug-circle-size) / 2));
+		z-index: 100;
+	}
+
 	#map-container {
 		min-width: var(--canvas-width);
 		min-height: var(--canvas-height);
@@ -290,33 +325,85 @@
 		overflow: hidden;
 		user-select: none;
 
+		background-size: 36px 36px;
+		background-image: linear-gradient(to right, grey 1px, rgba(black, 0.025) 1px),
+			linear-gradient(to bottom, grey 1px, rgba(black, 0.025) 1px);
+		background-position: center;
+
+		cursor: grab;
+
+		&:active {
+			cursor: grabbing;
+		}
+
 		.map-axis {
+			display: flex;
+			// display: none;
 			position: absolute;
+			top: 0;
+			height: 100%;
+			width: 100%;
 			color: red;
 			font-weight: bold;
+			z-index: 100;
+			pointer-events: none;
+
+			&::after {
+				content: '';
+			}
 
 			&.axis-v-min {
-				top: 0;
-				left: 50%;
-				transform: translateY(-50%);
+				// top: 0;
+				// left: 50%;
+				// transform: translateX(-50%);
+				justify-content: center;
+				align-items: flex-start;
+
+				&::after {
+					position: absolute;
+					height: 100%;
+					width: 1px;
+					background: orange;
+				}
 			}
 
 			&.axis-v-max {
-				bottom: 0;
-				left: 50%;
-				transform: translateY(-50%);
+				// bottom: 0;
+				// left: 50%;
+				// transform: translateX(-50%);
+				justify-content: center;
+				align-items: flex-end;
 			}
 
 			&.axis-h-min {
-				top: 50%;
-				left: 0;
-				transform: translateY(-50%);
+				// top: 50%;
+				// left: 0;
+				// transform: translateY(-50%);
+				justify-content: flex-start;
+				align-items: center;
+
+				&::after {
+					position: absolute;
+					width: 100%;
+					height: 1px;
+					background: orange;
+				}
 			}
 
 			&.axis-h-max {
-				top: 50%;
-				right: 0;
-				transform: translateY(-50%);
+				// top: 50%;
+				// right: 0;
+				// transform: translateY(-50%);
+				justify-content: flex-end;
+				align-items: center;
+			}
+		}
+
+		:globa {
+			#svg-map-image,
+			#svg-map-details {
+				width: 100%;
+				height: 100%;
 			}
 		}
 
@@ -329,7 +416,6 @@
 
 		#map-image,
 		#map-details {
-			transform: var(--zoom-transform);
 			pointer-events: none;
 			visibility: hidden;
 		}
