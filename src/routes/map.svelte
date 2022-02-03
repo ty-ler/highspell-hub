@@ -24,7 +24,8 @@
 	import type { ClientCacheVersion } from 'lib';
 	import type { GroundItem } from 'src/interfaces/ground-items';
 	import { map, transform } from 'lodash';
-	import { zoom } from 'd3';
+	import { select, zoom } from 'd3';
+	import { select_option } from 'svelte/internal';
 
 	interface Coordinates {
 		width: number;
@@ -33,6 +34,8 @@
 
 	export let itemDefs: ItemDef[];
 	export let version: ClientCacheVersion;
+
+	const MAP_SIZE = 1024;
 
 	const itemDefsWithGroundItems = () => [...itemDefs?.filter((def) => !!def.groundItems)];
 
@@ -83,6 +86,9 @@
 	};
 
 	const handleResize = (e: Event) => {
+		// canvasWidth = mapContainer.clientWidth;
+		// canvasHeight = mapContainer.clientHeight;
+
 		buildMap();
 	};
 
@@ -107,40 +113,42 @@
 		buildMap();
 	};
 
+	let scale: number = 1;
+	let maxScale: number = 1;
+	let maxFontSize: number = 16;
+	let minFontSize: number = 6.5;
+	let fontSize: number = maxFontSize;
+
 	const getTextWidth = (text: string, fontSize: number, fontFace: string) => {
 		_context.font = fontSize + 'px ' + fontFace;
 		return _context.measureText(text).width;
 	};
 
-	const worldToPixel = (
-		value: number,
-		maxSize: number,
-		reverse: boolean,
-		name?: string
-	): number => {
-		const center = maxSize / 2;
-
-		// return center - Math.abs(value);
-
+	const worldToPixel = (value: number, reverse: boolean): number => {
+		const center = MAP_SIZE / 2;
 		return Math.abs(value + (reverse ? center * -1 : center));
 	};
+
+	function transform(t) {
+		return function (d: GroundItem) {
+			return `translate(${t.apply([d.x, d.y])})`;
+		};
+	}
 
 	const groundItemName = (itemDef: ItemDef, groundItem: GroundItem) => {
 		let name = `${itemDef.name}${groundItem.amount > 1 ? ` (${groundItem.amount})` : ''}`;
 
 		if (showCoordinates) name += ` (x: ${groundItem.x}, y: ${groundItem.y})`;
 		if (debug)
-			name += ` ([pixel space] x: ${worldToPixel(
-				groundItem.x,
-				canvasWidth,
-				false
-			)}, y: ${worldToPixel(groundItem.y, canvasHeight, true)})`;
+			name += ` ([pixel space] x: ${worldToPixel(groundItem.x, false)}, y: ${worldToPixel(
+				groundItem.y,
+				true
+			)})`;
 		return name;
 	};
 
 	const buildMap = () => {
-		const svg = d3.selectAll('#map-svg');
-
+		const svg = d3.selectAll('#map-svg').attr('viewBox', `0 0 ${canvasWidth} ${canvasHeight}`);
 		svg.selectAll('*').remove();
 
 		const containerGroup = svg.append('g');
@@ -163,6 +171,37 @@
 			containerGroup.attr('transform', zoomTransform);
 		}
 
+		const nodeGroup = containerGroup.append('g');
+
+		const groups = displayedItemDefs.map((def, idx) => {
+			const circleGroup = nodeGroup.selectAll('#map-svg').data(def.groundItems).join('g');
+
+			circleGroup
+				.append('circle')
+				.attr('cx', (d) => worldToPixel(d.x, false))
+				.attr('cy', (d) => worldToPixel(d.y, true))
+				.attr('r', 1)
+				.style('fill', 'red');
+			// .style('stroke', 'red');
+
+			const texts = circleGroup
+				.append('text')
+				.text((d) => groundItemName(def, d))
+				.attr('fill', 'white')
+				.attr('font-size', `${fontSize}px`)
+				.attr(
+					'dx',
+					(d) =>
+						worldToPixel(d.x, false) - getTextWidth(groundItemName(def, d), fontSize, 'Arial') / 2
+				)
+				.attr('dy', (d) => worldToPixel(d.y + 3, true));
+
+			return {
+				texts,
+				def
+			};
+		});
+
 		const worldTopLeft: [number, number] = [0, 0];
 		const worldBottomRight: [number, number] = [canvasWidth, canvasHeight];
 
@@ -172,40 +211,28 @@
 				.scaleExtent([1, 5])
 				.translateExtent([worldTopLeft, worldBottomRight])
 				.on('zoom', (e) => {
-					const transform = e.transform;
-					zoomTransform = transform;
-					containerGroup.attr('transform', transform);
+					const trans = e.transform;
+					zoomTransform = trans;
+					scale = trans.k;
+
+					containerGroup.attr('transform', trans);
+					groups.map((group) => {
+						const { def, texts } = group;
+						if (scale > maxScale) {
+							fontSize = Math.max(maxFontSize / scale, minFontSize);
+							texts.attr('font-size', `${fontSize}px`);
+							texts.attr(
+								'dx',
+								(d) =>
+									worldToPixel(d.x, false) -
+									getTextWidth(groundItemName(def, d), fontSize, 'Arial') / 2
+							);
+						} else {
+							texts.attr('font-size', `${maxFontSize}px`);
+						}
+					});
 				})
 		);
-
-		svg.attr('width', canvasWidth).attr('height', canvasHeight);
-
-		const nodeGroup = containerGroup.append('g');
-
-		displayedItemDefs.map((def, idx) => {
-			const circleGroup = nodeGroup.selectAll('#map-svg').data(def.groundItems).enter().append('g');
-
-			circleGroup
-				.append('circle')
-				.attr('cx', (d) => worldToPixel(d.x, canvasWidth, false, `${def.name} x: `))
-				.attr('cy', (d) => worldToPixel(d.y, canvasHeight, true, `${def.name} y: `))
-				.attr('r', 1)
-				.style('fill', 'red');
-			// .style('stroke', 'red');
-
-			circleGroup
-				.append('text')
-				.text((d) => groundItemName(def, d))
-				.attr('fill', 'white')
-				.attr('font-size', '16px')
-				.attr(
-					'dx',
-					(d) =>
-						worldToPixel(d.x, canvasWidth, false) -
-						getTextWidth(groundItemName(def, d), 16, 'Arial') / 2
-				)
-				.attr('dy', (d) => worldToPixel(d.y + 3, canvasHeight, true));
-		});
 	};
 
 	onMount(() => {
@@ -281,7 +308,7 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		overflow: auto;
+		// overflow: auto;
 		height: 100%;
 	}
 
@@ -291,6 +318,11 @@
 		gap: 1rem;
 		align-items: center;
 		align-self: flex-start;
+		position: sticky;
+		top: 0;
+		width: 100%;
+		z-index: 10;
+		background: white;
 		padding: 1rem;
 	}
 
@@ -299,7 +331,7 @@
 		justify-content: center;
 		width: 100%;
 		height: 100%;
-		overflow: auto;
+		// overflow: auto;
 	}
 
 	.debug-circle {
@@ -316,10 +348,10 @@
 	}
 
 	#map-container {
-		min-width: var(--canvas-width);
-		min-height: var(--canvas-height);
-		max-width: var(--canvas-width);
-		max-height: var(--canvas-height);
+		// min-width: var(--canvas-width);
+		// min-height: var(--canvas-height);
+		// max-width: var(--canvas-width);
+		// max-height: var(--canvas-height);
 
 		position: relative;
 		overflow: hidden;
@@ -418,6 +450,11 @@
 		#map-details {
 			pointer-events: none;
 			visibility: hidden;
+		}
+
+		#map-svg {
+			width: 100%;
+			height: 100%;
 		}
 
 		#map-image {

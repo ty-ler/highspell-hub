@@ -193,7 +193,7 @@
 		flex-direction: column;
 		width: 100%;
 		border-spacing: 0px;
-		overflow: auto;
+		// overflow: auto;
 
 		.items-table-column-header {
 			flex: 1;
