@@ -11,7 +11,7 @@
 		<div class="brand" />
 		<div class="nav">
 			<HeaderItem href="/" icon={faHome}>Home</HeaderItem>
-			<!-- <HeaderItem href="map" icon={faMapMarked}>Map</HeaderItem> -->
+			<HeaderItem href="map" icon={faMapMarked}>Map</HeaderItem>
 			<HeaderItem href="caches" icon={faHistory}>Caches</HeaderItem>
 		</div>
 	</div>

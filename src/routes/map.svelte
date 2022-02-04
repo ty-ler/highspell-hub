@@ -24,10 +24,30 @@
 	import type { ClientCacheVersion } from 'lib';
 	import type { GroundItem } from 'src/interfaces/ground-items';
 	import { locations } from '$lib/game/locations';
+	import { group, select } from 'd3';
+	import { at, max } from 'lodash';
+	import { attr } from 'svelte/internal';
+	import type { Mouse } from 'puppeteer';
 
 	interface Coordinates {
 		width: number;
 		height: number;
+	}
+
+	interface MapState {
+		showGroundItems: boolean;
+		showGroundItemCoordinates: boolean;
+		showLocations: boolean;
+	}
+
+	interface MapFontSize {
+		min: number;
+		max: number;
+	}
+
+	interface MapFontSizes {
+		groundItems: MapFontSize;
+		locations: MapFontSize;
 	}
 
 	export let itemDefs: ItemDef[];
@@ -37,21 +57,38 @@
 
 	const itemDefsWithGroundItems = () => [...itemDefs?.filter((def) => !!def.groundItems)];
 
-	const cacheShowCoordsKey = 'map-show-coordinates';
-	const cacheShowCoords = (showCoords: boolean) => {
-		localStorage.setItem(cacheShowCoordsKey, JSON.stringify(showCoords));
+	const cachedMapStateKey = 'map-state';
+	const cacheMapState = () => {
+		localStorage.setItem(cachedMapStateKey, JSON.stringify(mapState));
 	};
 
-	const getCachedShowCoords = () => {
+	const getCachedMapState = (): MapState => {
+		const defaultMapState: MapState = {
+			showGroundItemCoordinates: false,
+			showGroundItems: false,
+			showLocations: true
+		};
+
 		try {
-			return JSON.parse(localStorage.getItem(cacheShowCoordsKey)) || false;
+			return JSON.parse(localStorage.getItem(cachedMapStateKey)) || defaultMapState;
 		} catch (e) {
-			return false;
+			return defaultMapState;
+		}
+	};
+
+	let mapState: MapState = getCachedMapState();
+	let mapFontSizes: MapFontSizes = {
+		groundItems: {
+			min: 6,
+			max: 12
+		},
+		locations: {
+			min: 12,
+			max: 18
 		}
 	};
 
 	let displayedItemDefs: ItemDef[] = itemDefsWithGroundItems();
-	let showCoordinates: boolean = getCachedShowCoords();
 
 	let mapContainer: HTMLElement;
 	let mapImage: HTMLImageElement;
@@ -74,8 +111,18 @@
 	const handleChangeShowCoordinates = (e: Event) => {
 		const checkboxElement = e.target as HTMLInputElement;
 		const checked = checkboxElement.checked;
-		showCoordinates = checked;
-		cacheShowCoords(showCoordinates);
+		mapState.showGroundItemCoordinates = checked;
+		cacheMapState();
+
+		buildMap();
+	};
+
+	const handleChangeShowGroundItems = (e: Event) => {
+		const checkboxElement = e.target as HTMLInputElement;
+		const checked = checkboxElement.checked;
+
+		mapState.showGroundItems = checked;
+		cacheMapState();
 
 		buildMap();
 	};
@@ -107,11 +154,12 @@
 
 	let scale: number = 1;
 	// let maxScale: number = 1;
-	let minFontSize: number = 4;
-	let maxFontSize: number = 12;
 	let minDotRadius: number = 0.5;
 	let maxDotRadius: number = 1;
-	let fontSize: number = maxFontSize;
+
+	let groundItemFontSize: number = mapFontSizes.groundItems.max;
+	let locationFontSize: number = mapFontSizes.locations.max;
+	let locationStrokeWidth: number = 1;
 	let dotRadius: number = maxDotRadius;
 
 	const getTextWidth = (text: string, fontSize: number, fontFace: string) => {
@@ -123,6 +171,11 @@
 		const center = MAP_SIZE / 2;
 		return Math.abs(value + (reverse ? center * -1 : center));
 	};
+
+	// const pixelToWorld = (value: number, reverse: boolean): number => {
+	// 	const center = MAP_SIZE / 2;
+	// 	return value - (reverse ? center * -1 : center);
+	// };
 
 	const overlapping = (rect1: DOMRect, rect2: DOMRect) => {
 		const padding = 0;
@@ -137,7 +190,7 @@
 	const groundItemName = (itemDef: ItemDef, groundItem: GroundItem) => {
 		let name = `${itemDef.name}${groundItem.amount > 1 ? ` (${groundItem.amount})` : ''}`;
 
-		if (showCoordinates) name += ` (x: ${groundItem.x}, y: ${groundItem.y})`;
+		if (mapState.showGroundItemCoordinates) name += ` (x: ${groundItem.x}, y: ${groundItem.y})`;
 		if (debug)
 			name += ` ([pixel space] x: ${worldToPixel(groundItem.x, false)}, y: ${worldToPixel(
 				groundItem.y,
@@ -148,19 +201,22 @@
 
 	const buildMap = () => {
 		const svg = d3.selectAll('#map-svg').attr('viewBox', `0 0 ${MAP_SIZE} ${MAP_SIZE}`);
+		// .on('mousemove', (e: MouseEvent) => {
+		// 	console.log(pixelToWorld(e.clientX, false));
+		// });
 		svg.selectAll('*').remove();
 
 		const mapElementsGroup = svg.append('g').attr('id', 'map-elements-group');
 
 		mapElementsGroup
-			.append('svg:image')
+			.append('image')
 			.attr('id', 'svg-map-image')
 			.attr('width', '100%')
 			.attr('height', '100%')
 			.attr('xlink:href', `client-caches/${version}/gameAssets/earthOverworldMap.png`);
 
 		mapElementsGroup
-			.append('svg:image')
+			.append('image')
 			.attr('id', 'svg-map-details')
 			.attr('width', '100%')
 			.attr('height', '100%')
@@ -169,83 +225,6 @@
 		if (zoomTransform) {
 			mapElementsGroup.attr('transform', zoomTransform);
 		}
-
-		const groundItemsGroup = mapElementsGroup.append('g').attr('id', 'ground-items-group');
-
-		const correctOverlappingText = (
-			texts: d3.Selection<SVGTextElement, GroundItem, SVGGElement, unknown>
-		) => {
-			texts.each(function (di) {
-				const that = this;
-				const thatSelect = d3.select(that);
-				const a = this.getBoundingClientRect();
-
-				let overlapped = false;
-
-				texts.each(function (dj) {
-					// if (overlapped) return;
-
-					if (this !== that) {
-						const thisSelect = d3.select(this);
-						const b = this.getBoundingClientRect();
-
-						if (overlapping(a, b)) {
-							overlapped = true;
-						} else if (thatSelect.style('display') === 'none') {
-							// thatSelect.style('display', 'block');
-							// overlapped = false;
-
-							return;
-						}
-					}
-				});
-
-				// if (overlapped) {
-				// 	thatSelect.style('display', 'none');
-				// }
-			});
-		};
-
-		const groundItemGroups = displayedItemDefs.map((def, idx) => {
-			const circleGroup = groundItemsGroup.selectAll('#map-svg').data(def.groundItems).join('g');
-
-			const circles = circleGroup
-				.append('circle')
-				.attr('cx', (d) => worldToPixel(d.x, false))
-				.attr('cy', (d) => worldToPixel(d.y, true))
-				.attr('r', dotRadius)
-				.style('fill', 'red');
-
-			const texts = circleGroup
-				.append('text')
-				.text((d) => groundItemName(def, d))
-				.attr('fill', 'white')
-				.attr('font-size', `${fontSize}px`)
-				.attr(
-					'dx',
-					(d) =>
-						worldToPixel(d.x, false) - getTextWidth(groundItemName(def, d), fontSize, 'Arial') / 2
-				)
-				.attr('dy', (d) => worldToPixel(d.y + 2, true));
-
-			correctOverlappingText(texts);
-
-			return {
-				circles,
-				texts,
-				def
-			};
-		});
-
-		const locationsGroup = mapElementsGroup.append('g').attr('id', 'locations-group');
-
-		const mapLocation = locationsGroup
-			.selectAll('text')
-			.data(locations)
-			.join('text')
-			.text((d) => d.name)
-			.attr('dx', (d) => d3.randomInt(MAP_SIZE)() - getTextWidth(d.name, 16, 'Arial') / 2)
-			.attr('dy', d3.randomInt(MAP_SIZE));
 
 		const worldTopLeft: [number, number] = [0, 0];
 		const worldBottomRight: [number, number] = [MAP_SIZE, MAP_SIZE];
@@ -256,35 +235,192 @@
 			.zoom()
 			.scaleExtent([1, maxScaleExtent])
 			.translateExtent([worldTopLeft, worldBottomRight])
-			.on('zoom', (e) => {
+			.on('zoom.general', (e) => {
 				const { transform, sourceEvent } = e;
 
 				zoomTransform = transform;
 				scale = transform.k;
 
 				mapElementsGroup.attr('transform', transform);
+			});
 
+		if (mapState.showGroundItems) {
+			const groundItemsGroup = mapElementsGroup.append('g').attr('id', 'ground-items-group');
+
+			const correctOverlappingText = (
+				texts: d3.Selection<SVGTextElement, GroundItem, SVGGElement, unknown>
+			) => {
+				texts.each(function (di) {
+					const that = this;
+					const thatSelect = d3.select(that);
+					const a = this.getBoundingClientRect();
+
+					texts.each(function (dj) {
+						if (this !== that) {
+							const thisSelect = d3.select(this);
+							const b = this.getBoundingClientRect();
+
+							if (overlapping(a, b)) {
+							} else if (thatSelect.style('display') === 'none') {
+								return;
+							}
+						}
+					});
+				});
+			};
+
+			const groundItemGroups = displayedItemDefs.map((def, idx) => {
+				const circleGroup = groundItemsGroup.selectAll('#map-svg').data(def.groundItems).join('g');
+
+				const circles = circleGroup
+					.append('circle')
+					.attr('cx', (d) => worldToPixel(d.x, false))
+					.attr('cy', (d) => worldToPixel(d.y, true))
+					.attr('r', dotRadius)
+					.style('fill', 'red');
+
+				const texts = circleGroup
+					.append('text')
+					.text((d) => groundItemName(def, d))
+					.attr('fill', 'white')
+					.attr('font-size', `${groundItemFontSize}px`)
+					.attr(
+						'dx',
+						(d) =>
+							worldToPixel(d.x, false) -
+							getTextWidth(groundItemName(def, d), groundItemFontSize, 'Arial') / 2
+					)
+					.attr('dy', (d) => worldToPixel(d.y + 2, true));
+
+				return {
+					circles,
+					texts,
+					def
+				};
+			});
+
+			zoom.on('zoom.ground-items', (e) => {
+				const { sourceEvent } = e;
 				if (!sourceEvent.buttons) {
 					groundItemGroups.map((group) => {
 						const { def, texts, circles } = group;
 
-						fontSize = Math.max(maxFontSize / scale, minFontSize);
+						const minFontSize = mapFontSizes.groundItems.min;
+						const maxFontSize = mapFontSizes.groundItems.max;
+						groundItemFontSize = Math.max(maxFontSize / scale, minFontSize);
 						dotRadius = Math.max(maxDotRadius / scale, minDotRadius);
 
-						texts.attr('font-size', `${fontSize}px`);
+						texts.attr('font-size', `${groundItemFontSize}px`);
 						texts.attr(
 							'dx',
 							(d) =>
 								worldToPixel(d.x, false) -
-								getTextWidth(groundItemName(def, d), fontSize, 'Arial') / 2
+								getTextWidth(groundItemName(def, d), groundItemFontSize, 'Arial') / 2
 						);
-
-						correctOverlappingText(texts);
 
 						circles.attr('r', dotRadius);
 					});
 				}
 			});
+		}
+
+		if (mapState.showLocations) {
+			const locationsGroup = mapElementsGroup.append('g').attr('id', 'locations-group');
+
+			const singleLineMapLocationDefs = locations.filter(
+				(d) => !d.nameLineBreak && d.x != null && d.y != null
+			);
+			const multiLineMapLocationDefs = locations.filter(
+				(d) => d.nameLineBreak && d.x != null && d.y != null
+			);
+
+			const singleLineMapLocations = locationsGroup
+				.selectAll('text')
+				.data(singleLineMapLocationDefs)
+				.join('text')
+				// .text((d) => d.name)
+				.attr('font-size', `${locationFontSize}px`)
+				.attr('font-weight', 'bold')
+				.attr('fill', 'white')
+				.attr('stroke', 'black')
+				.attr('stroke-width', `${locationStrokeWidth}px`)
+				.attr('dx', (d) => d.x - getTextWidth(d.name, locationFontSize, 'Arial') / 2)
+				.attr('dy', (d) => d.y)
+				.text((d) => d.name);
+
+			const multiLineMapLocations = locationsGroup
+				.selectAll('g')
+				.data(multiLineMapLocationDefs)
+				.join('g');
+			const maxTextWidths = multiLineMapLocationDefs.map((def) =>
+				Math.max(
+					...def.name
+						.split(' ')
+						.map((namePart) => getTextWidth(namePart, locationFontSize, 'Arial'))
+				)
+			);
+
+			multiLineMapLocations.each((d, i, groups) => {
+				const nameSplit = d.name.split(' ');
+				const selection = d3.select(groups[i]);
+
+				const maxTextWidth = maxTextWidths[i];
+
+				nameSplit.map((namePart, j) => {
+					selection
+						.append('text')
+						.text(namePart)
+						.attr('font-size', `${locationFontSize}px`)
+						.attr('font-weight', 'bold')
+						.attr('fill', 'white')
+						.attr('stroke', 'black')
+						.attr('stroke-width', `${locationStrokeWidth}px`)
+						.attr(
+							'dx',
+							d.x +
+								(maxTextWidth - getTextWidth(namePart, locationFontSize, 'Arial')) / 2 -
+								maxTextWidth / 2
+						)
+						.attr('dy', d.y + j * locationFontSize);
+				});
+			});
+
+			zoom.on('zoom.locations', (e) => {
+				const { sourceEvent } = e;
+
+				const minFontSize = mapFontSizes.locations.min;
+				const maxFontSize = mapFontSizes.locations.max;
+				locationFontSize = Math.max(maxFontSize / scale, minFontSize);
+				locationStrokeWidth = Math.max(1 / scale, 0.25);
+
+				if (!sourceEvent.buttons) {
+					singleLineMapLocations
+						.attr('font-size', `${locationFontSize}px`)
+						.attr('stroke-width', `${locationStrokeWidth}px`)
+						.attr('dx', (d) => d.x - getTextWidth(d.name, locationFontSize, 'Arial') / 2);
+
+					multiLineMapLocations.each(function (d, i) {
+						const selection = d3.select(this);
+						selection
+							.selectAll('text')
+							.attr('font-size', `${locationFontSize}px`)
+							.attr('stroke-width', `${locationStrokeWidth}px`)
+							.attr('dx', function (_d: any) {
+								const selection = d3.select(this);
+								const namePart = selection.text();
+								const maxTextWidth = maxTextWidths[i];
+
+								return (
+									_d.x +
+									(maxTextWidth - getTextWidth(namePart, locationFontSize, 'Arial')) / 2 -
+									maxTextWidth / 2
+								);
+							})
+							.attr('dy', (_d: any, j) => _d.y + j * locationFontSize);
+					});
+				}
+			});
+		}
 
 		svg.call(zoom);
 	};
@@ -317,15 +453,28 @@
 			value={filterValue}
 			on:input={(e) => handleChangeItemFilterField(e)}
 		/>
-		<div class="checkbox-container">
-			<input
-				type="checkbox"
-				id="coordinates-toggle"
-				name="coordinates-toggle"
-				checked={showCoordinates}
-				on:change={(e) => handleChangeShowCoordinates(e)}
-			/>
-			<label class="no-select" for="coordinates-toggle">Show Coordinates</label>
+		<div class="ground-items-checkboxes">
+			<div class="checkbox-container">
+				<input
+					type="checkbox"
+					id="ground-items-toggle"
+					name="ground-items-toggle"
+					checked={mapState.showGroundItems}
+					on:change={(e) => handleChangeShowGroundItems(e)}
+				/>
+				<label class="no-select" for="ground-items-toggle">Ground Items</label>
+			</div>
+			<div class="checkbox-container">
+				<input
+					type="checkbox"
+					id="coordinates-toggle"
+					name="coordinates-toggle"
+					checked={mapState.showGroundItems && mapState.showGroundItemCoordinates}
+					disabled={!mapState.showGroundItems}
+					on:change={(e) => handleChangeShowCoordinates(e)}
+				/>
+				<label class="no-select" for="coordinates-toggle">Ground Item Coordinates</label>
+			</div>
 		</div>
 	</div>
 	<div class="map-scroll-container">
@@ -377,6 +526,16 @@
 		z-index: 10;
 		background: white;
 		padding: 1rem;
+	}
+
+	.ground-items-checkboxes {
+		display: flex;
+		flex-direction: column;
+		gap: 0.25rem;
+
+		#coordinates-toggle {
+			// margin-left: 1rem;
+		}
 	}
 
 	.map-scroll-container {
@@ -527,6 +686,16 @@
 
 		#map-svg {
 			z-index: 3;
+		}
+
+		:global {
+			.multi-line-location {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				text-align: center;
+				// -webkit-text-stroke: 1px black;
+			}
 		}
 	}
 </style>
