@@ -270,7 +270,10 @@
 			};
 
 			const groundItemGroups = displayedItemDefs.map((def, idx) => {
-				const circleGroup = groundItemsGroup.selectAll('#map-svg').data(def.groundItems).join('g');
+				const circleGroup = groundItemsGroup
+					.selectAll('#map-svg')
+					.data(def.groundItems.filter((groundItem) => groundItem.mapLevel === 1))
+					.join('g');
 
 				const circles = circleGroup
 					.append('circle')
