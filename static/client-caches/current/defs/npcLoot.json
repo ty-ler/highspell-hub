@@ -6988,6 +6988,130 @@
           "odds": 0.00004
         }
       ]
+    },
+    {
+      "_id": 73,
+      "npc": "skeletal dwarf lv 44",
+      "rareLootProbability": 0.015,
+      "rootLoot": {
+        "probability": 0.2,
+        "tableId": 1
+      },
+      "baseLoot": [
+        {
+          "itemId": 39,
+          "name": "bones",
+          "isIOU": false,
+          "amount": 1
+        }
+      ],
+      "loot": [
+        {
+          "itemId": 6,
+          "name": "coins",
+          "amount": 10,
+          "isIOU": false,
+          "odds": 0.2
+        },
+        {
+          "itemId": 6,
+          "name": "coins",
+          "amount": 15,
+          "isIOU": false,
+          "odds": 0.175
+        },
+        {
+          "itemId": 6,
+          "name": "coins",
+          "amount": 20,
+          "isIOU": false,
+          "odds": 0.15
+        },
+        {
+          "itemId": 142,
+          "name": "coal",
+          "amount": 2,
+          "isIOU": true,
+          "odds": 0.1
+        },
+        {
+          "itemId": 79,
+          "name": "iron ore",
+          "amount": 3,
+          "isIOU": true,
+          "odds": 0.1
+        },
+        {
+          "itemId": 143,
+          "name": "steel bar",
+          "amount": 1,
+          "isIOU": false,
+          "odds": 0.05
+        },
+        {
+          "itemId": 178,
+          "name": "fury scroll",
+          "amount": 5,
+          "isIOU": false,
+          "odds": 0.05
+        },
+        {
+          "itemId": 143,
+          "name": "steel bar",
+          "amount": 2,
+          "isIOU": true,
+          "odds": 0.025
+        },
+        {
+          "itemId": 127,
+          "name": "steel heavy sword",
+          "amount": 1,
+          "isIOU": false,
+          "odds": 0.025
+        },
+        {
+          "itemId": 128,
+          "name": "iron full helm",
+          "amount": 1,
+          "isIOU": false,
+          "odds": 0.025
+        },
+        {
+          "itemId": 75,
+          "name": "steel pickaxe",
+          "amount": 1,
+          "isIOU": false,
+          "odds": 0.025
+        },
+        {
+          "itemId": 179,
+          "name": "rage scroll",
+          "amount": 5,
+          "isIOU": false,
+          "odds": 0.02
+        },
+        {
+          "itemId": 119,
+          "name": "iron legs",
+          "amount": 1,
+          "isIOU": false,
+          "odds": 0.02
+        },
+        {
+          "itemId": 196,
+          "name": "emerald necklace",
+          "amount": 1,
+          "isIOU": false,
+          "odds": 0.01
+        },
+        {
+          "itemId": 271,
+          "name": "potion of mining",
+          "amount": 1,
+          "isIOU": true,
+          "odds": 0.01
+        }
+      ]
     }
   ]
 }

@@ -4516,5 +4516,50 @@
       "width": 1,
       "height": 2
     }
+  },
+  {
+    "_id": 130,
+    "name": "Skeletal Dwarf",
+    "description": "A short undead dwarf",
+    "moveEagerness": 0.4,
+    "canShop": false,
+    "combat": {
+      "level": 44,
+      "hitpoints": 56,
+      "accuracy": 32,
+      "strength": 38,
+      "defense": 25,
+      "magic": 1,
+      "range": 1,
+      "accuracyBonus": 10,
+      "strengthBonus": 10,
+      "defenseBonus": 32,
+      "magicBonus": 1,
+      "rangeBonus": 1,
+      "speed": 1,
+      "aggroRadius": 7,
+      "isAlwaysAggro": false,
+      "respawnLength": 50,
+      "lootTableId": 73
+    },
+    "appearance": {
+      "hair": 22,
+      "beard": 14,
+      "shirt": 0,
+      "body": 11,
+      "pants": 6,
+      "helmet": 120,
+      "chest": null,
+      "legs": 119,
+      "belt": null,
+      "gloves": null,
+      "boots": null,
+      "back": null,
+      "neck": null,
+      "weapon": 74,
+      "shield": null,
+      "width": 0.9,
+      "height": 1.5
+    }
   }
 ]

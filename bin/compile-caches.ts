@@ -102,7 +102,9 @@ const compileItemDefs = async (cacheVersionDirPath: string) => {
 };
 
 console.clear();
-const cachesVersions = fs.readdirSync(cacheDirPath) as ClientCacheVersion[];
+const cachesVersions = fs
+	.readdirSync(cacheDirPath)
+	.filter((dir) => !dir.startsWith('.')) as ClientCacheVersion[];
 await Promise.all(
 	cachesVersions.map(async (version) => {
 		const cacheVersionDirPath = getCacheVersionDirPath(version);

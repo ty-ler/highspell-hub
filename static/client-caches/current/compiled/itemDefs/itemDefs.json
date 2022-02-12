@@ -422,6 +422,15 @@
         "mapLevel": 2,
         "x": -210,
         "y": 113
+      },
+      {
+        "itemId": 6,
+        "isIOU": false,
+        "amount": 7,
+        "respawnTicks": 300,
+        "mapLevel": 0,
+        "x": -361,
+        "y": -196
       }
     ]
   },
@@ -517,7 +526,7 @@
     "equippableRequirements": [
       {
         "skill": "fishing",
-        "amount": 15
+        "amount": 10
       }
     ],
     "equipmentType": "weapon",
@@ -552,7 +561,7 @@
     "equippableRequirements": [
       {
         "skill": "fishing",
-        "amount": 40
+        "amount": 35
       }
     ],
     "equipmentType": "weapon",
@@ -587,7 +596,7 @@
     "equippableRequirements": [
       {
         "skill": "fishing",
-        "amount": 60
+        "amount": 50
       }
     ],
     "equipmentType": "weapon",
@@ -2240,6 +2249,51 @@
         "mapLevel": 1,
         "x": 377,
         "y": -476
+      },
+      {
+        "itemId": 39,
+        "isIOU": false,
+        "amount": 1,
+        "respawnTicks": 100,
+        "mapLevel": 0,
+        "x": -336,
+        "y": -171
+      },
+      {
+        "itemId": 39,
+        "isIOU": false,
+        "amount": 1,
+        "respawnTicks": 100,
+        "mapLevel": 0,
+        "x": -364,
+        "y": -175
+      },
+      {
+        "itemId": 39,
+        "isIOU": false,
+        "amount": 1,
+        "respawnTicks": 100,
+        "mapLevel": 0,
+        "x": -388,
+        "y": -166
+      },
+      {
+        "itemId": 39,
+        "isIOU": false,
+        "amount": 1,
+        "respawnTicks": 100,
+        "mapLevel": 0,
+        "x": -370,
+        "y": -134
+      },
+      {
+        "itemId": 39,
+        "isIOU": false,
+        "amount": 1,
+        "respawnTicks": 100,
+        "mapLevel": 0,
+        "x": -347,
+        "y": -113
       }
     ]
   },
@@ -5022,7 +5076,18 @@
     },
     "recipe": null,
     "metalType": null,
-    "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAA6/AAAOvwE4BVMkAAABPUlEQVRoge2UwW3DMBAE+XAFacZpJ42oEwEpw+80oa86SAMSJqBtAoScSKTE450QPvZFEJhZLOkAd+Y4bQCaAPot0iaEfpO0R8w547QBaALotTd/veFzugkF8PmZ6fu6W8QE/PSMeYE1+Mm6wBJ+KTBbnpAUPDUEtuAnywLS8EgKdDeXBD9bE/DgPsPnZRW+RPuUFOjHB3hNeEoJBPBUeLMCQ2V4SgjkwpsT6MdXgS14f8eEQD+6O4wWPEcEwnRigRR4f8eUwJDQfjgPd9QFul++zS14ifbZI5ADv5xO6f1zRCAHXqp99gp4+NzpmBDoovZ9UmYjCY+EwHI2kvAcfQN/TaYWPLkC7x8OnwC31rrEj0MpgVgihq/ZPEcFYokAXwuavQIW47QBaALot0ibEPpN0h4x54zTBuC/C/wAhIuXNc1zR2gAAAAASUVORK5CYII="
+    "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAA6/AAAOvwE4BVMkAAABPUlEQVRoge2UwW3DMBAE+XAFacZpJ42oEwEpw+80oa86SAMSJqBtAoScSKTE450QPvZFEJhZLOkAd+Y4bQCaAPot0iaEfpO0R8w547QBaALotTd/veFzugkF8PmZ6fu6W8QE/PSMeYE1+Mm6wBJ+KTBbnpAUPDUEtuAnywLS8EgKdDeXBD9bE/DgPsPnZRW+RPuUFOjHB3hNeEoJBPBUeLMCQ2V4SgjkwpsT6MdXgS14f8eEQD+6O4wWPEcEwnRigRR4f8eUwJDQfjgPd9QFul++zS14ifbZI5ADv5xO6f1zRCAHXqp99gp4+NzpmBDoovZ9UmYjCY+EwHI2kvAcfQN/TaYWPLkC7x8OnwC31rrEj0MpgVgihq/ZPEcFYokAXwuavQIW47QBaALot0ibEPpN0h4x54zTBuC/C/wAhIuXNc1zR2gAAAAASUVORK5CYII=",
+    "groundItems": [
+      {
+        "itemId": 100,
+        "isIOU": false,
+        "amount": 1,
+        "respawnTicks": 500,
+        "mapLevel": 0,
+        "x": -382,
+        "y": -139
+      }
+    ]
   },
   {
     "_id": 101,
@@ -5693,6 +5758,15 @@
         "mapLevel": 1,
         "x": -101,
         "y": -213
+      },
+      {
+        "itemId": 120,
+        "isIOU": false,
+        "amount": 1,
+        "respawnTicks": 500,
+        "mapLevel": 0,
+        "x": -383,
+        "y": -125
       }
     ]
   },
@@ -15440,7 +15514,7 @@
     "equippableRequirements": [
       {
         "skill": "range",
-        "amount": 60
+        "amount": 70
       }
     ],
     "equipmentType": "projectile",

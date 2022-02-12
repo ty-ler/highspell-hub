@@ -216,7 +216,7 @@
     "equippableRequirements": [
       {
         "skill": "fishing",
-        "amount": 15
+        "amount": 10
       }
     ],
     "equipmentType": "weapon",
@@ -250,7 +250,7 @@
     "equippableRequirements": [
       {
         "skill": "fishing",
-        "amount": 40
+        "amount": 35
       }
     ],
     "equipmentType": "weapon",
@@ -284,7 +284,7 @@
     "equippableRequirements": [
       {
         "skill": "fishing",
-        "amount": 60
+        "amount": 50
       }
     ],
     "equipmentType": "weapon",
@@ -12891,7 +12891,7 @@
     "equippableRequirements": [
       {
         "skill": "range",
-        "amount": 60
+        "amount": 70
       }
     ],
     "equipmentType": "projectile",

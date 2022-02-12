@@ -422,8 +422,8 @@
   {
     "_id": 24,
     "type": "ironrocks",
-    "name": "Rocks",
-    "desc": "I should try mining it",
+    "name": "Iron Rocks",
+    "desc": "It looks like these rocks contain iron ore",
     "actions": [
       "mine"
     ],
@@ -437,8 +437,8 @@
   {
     "_id": 25,
     "type": "copperrocks",
-    "name": "Rocks",
-    "desc": "I should try mining this",
+    "name": "Copper Rocks",
+    "desc": "It looks like these rocks contain copper ore",
     "actions": [
       "mine"
     ],
@@ -452,8 +452,8 @@
   {
     "_id": 26,
     "type": "tinrocks",
-    "name": "Rocks",
-    "desc": "I should try mining this",
+    "name": "Tin Rocks",
+    "desc": "It looks like these rocks contain tin ore",
     "actions": [
       "mine"
     ],
@@ -467,8 +467,8 @@
   {
     "_id": 27,
     "type": "coalrocks",
-    "name": "Rocks",
-    "desc": "I should try mining this",
+    "name": "Coal Rocks",
+    "desc": "It looks like these rocks contain coal",
     "actions": [
       "mine"
     ],
@@ -482,8 +482,8 @@
   {
     "_id": 28,
     "type": "palladiumrocks",
-    "name": "Rocks",
-    "desc": "I should try mining this",
+    "name": "Palladium Rocks",
+    "desc": "It looks like these rocks contain palladium",
     "actions": [
       "mine"
     ],
@@ -497,8 +497,8 @@
   {
     "_id": 29,
     "type": "coroniumrocks",
-    "name": "Rocks",
-    "desc": "I should try mining this",
+    "name": "Coronium Rocks",
+    "desc": "It looks like these rocks contain coronium",
     "actions": [
       "mine"
     ],
@@ -568,8 +568,8 @@
   {
     "_id": 34,
     "type": "silverrocks",
-    "name": "Rocks",
-    "desc": "I should try mining this",
+    "name": "Silver Rocks",
+    "desc": "It looks like these rocks contain silver",
     "actions": [
       "mine"
     ],
@@ -583,8 +583,8 @@
   {
     "_id": 35,
     "type": "goldrocks",
-    "name": "Rocks",
-    "desc": "I should try mining this",
+    "name": "Gold Rocks",
+    "desc": "It looks like these rocks contain gold",
     "actions": [
       "mine"
     ],
