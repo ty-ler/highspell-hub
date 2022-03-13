@@ -328,6 +328,7 @@
 			max-height: calc(100% - (10px * 2));
 			overflow: hidden;
 			z-index: 401;
+			pointer-events: none;
 
 			.map-info-panel {
 				background: var(--surface-100);
@@ -336,6 +337,7 @@
 				padding: 0.5rem;
 				color: var(--text-color);
 				box-shadow: 0 0px 8px rgb(0 0 0 / 40%);
+				pointer-events: all;
 			}
 		}
 
@@ -479,6 +481,7 @@
 		.map-info-coords {
 			font-size: 0.9rem;
 			opacity: 1;
+			pointer-events: none !important;
 
 			transition: opacity 0.2s ease 0s;
 
