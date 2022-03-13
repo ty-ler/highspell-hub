@@ -20,19 +20,26 @@
 
 <script lang="ts">
 	import Map from '$lib/components/Map/Map.svelte';
-
-	export const prerender = false;
+	import { onDestroy, onMount } from 'svelte';
+	import { fullscreenContent } from '$lib/stores/store';
 
 	export let itemDefs: ItemDef[];
+
+	onMount(() => {
+		fullscreenContent.set(true);
+	});
+
+	onDestroy(() => {
+		fullscreenContent.set(false);
+	});
 </script>
 
-<div class="main-content map-main-content">
+<div class="map-main-content main-content main-content-fullscreen">
 	<Map {itemDefs} />
 </div>
 
 <style lang="scss">
 	.map-main-content {
-		height: 100%;
 		// height: calc(100vh - var(--header-height));
 		// max-height: calc(100vh - var(--header-height));
 		max-width: 100vw;

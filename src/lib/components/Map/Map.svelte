@@ -317,6 +317,7 @@
 		display: flex;
 		flex-direction: column;
 		overflow: hidden;
+		z-index: 10;
 
 		--map-overlay-margin: 10px;
 

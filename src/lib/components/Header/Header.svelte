@@ -27,7 +27,7 @@
 	.header {
 		display: flex;
 		justify-content: center;
-		// position: fixed;
+		position: fixed;
 		top: 0;
 		padding: 0 1rem;
 		width: 100%;
