@@ -19,22 +19,24 @@
 
 <style lang="scss">
 	:global(:root) {
-		--header-height: 51px;
+		--header-height-initial: 51px;
+		--header-border-size: 1px;
+		--header-height: calc(var(--header-height-initial) - var(--header-border-size));
 	}
 
 	.header {
-		--border-size: 1px;
-		--corrected-header-height: calc(var(--header-height) - var(--border-size));
-
 		display: flex;
 		justify-content: center;
+		position: fixed;
 		top: 0;
 		padding: 0 1rem;
-		min-height: var(--corrected-header-height);
-		max-height: var(--corrected-header-height);
+		width: 100%;
+		min-height: var(--header-height);
+		max-height: var(--header-height);
 		// background: darken(white, 5%);
 		background: var(--surface-100);
 		border-bottom: var(--border-size) solid rgba(black, 0.15);
+		z-index: 1000;
 
 		.header-content {
 			display: flex;

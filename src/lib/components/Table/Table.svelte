@@ -18,6 +18,7 @@
 	export let columns: TableColumn[];
 	export let data: any[] = [];
 	export let sticky: boolean = false;
+	export let stickyTop: string = '0px';
 	export let centerColumns: boolean = true;
 	export let canHover: boolean = true;
 	export let canClickRow: boolean = false;
@@ -142,7 +143,11 @@
 		</div>
 	{/if}
 	<div {...$$restProps} class={`hsh-table ${$$props.class}`}>
-		<div class="hsh-table-row hsh-table-header-row" class:hsh-table-header-row-sticky={sticky}>
+		<div
+			class="hsh-table-row hsh-table-header-row"
+			class:hsh-table-header-row-sticky={sticky}
+			style:--hsh-table-header-row-sticky-top={stickyTop}
+		>
 			{#each columns as column}
 				<div
 					class="hsh-table-column hsh-table-column-header 
@@ -276,7 +281,7 @@
 
 			&.hsh-table-header-row-sticky {
 				position: sticky;
-				top: 0px;
+				top: var(--hsh-table-header-row-sticky-top);
 			}
 		}
 

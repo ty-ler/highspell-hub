@@ -12,11 +12,11 @@
 		@import '../lib/styles/styles.scss';
 
 		.main-content-container {
-			// display: flex;
-			// justify-content: center;
-			overflow: auto;
+			// overflow: auto;
 			height: 100%;
 			width: 100%;
+			padding-top: var(--header-height);
+			// height: calc(100vh - var(--header-height));
 		}
 
 		.main-content {
