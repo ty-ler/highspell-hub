@@ -19,17 +19,10 @@
 		addLocationMarkers,
 		filterMarkers,
 		getMarkerData,
-		getMarkerFilteredOut,
-		isMarkerVisible,
-		showMarkers
+		getMarkerFilteredOut
 	} from '$lib/common/map/marker';
 	import type { Coordinates } from 'src/interfaces/common/map';
-	import {
-		pixelXToWorld,
-		pixelYToWorld,
-		worldXToPixel,
-		worldYToPixel
-	} from '$lib/common/map/helpers';
+	import { pixelXToWorld, pixelYToWorld } from '$lib/common/map/helpers';
 	import { delay } from '$lib/utils/delay';
 	import { orderBy } from 'lodash-es';
 	import { browser } from '$app/env';
@@ -225,15 +218,21 @@
 	});
 </script>
 
-<div id="map" style:--map-size="{MAP_SIZE}px">
+<div id="map-container">
+	<div id="map" style:--map-size="{MAP_SIZE}px" />
 	{#if mapReady}
+		<!-- on:mouseenter={(e) => handleLegendMouseEnter(e)}
+				on:mouseleave={(e) => handleLegendMouseLeave(e)} -->
 		<div class="map-info-panels">
-			<div
-				class="map-info-legend map-info-panel"
-				class:map-info-legend-open={legendOpen}
-				on:mouseenter={(e) => handleLegendMouseEnter(e)}
-				on:mouseleave={(e) => handleLegendMouseLeave(e)}
-			>
+			{#if !forceHideCoordinates}
+				<div class="map-info-coords map-info-panel" class:map-info-coords-hidden={!mouseWorld}>
+					<strong>x: </strong>
+					<span>{mouseWorld?.x ?? 0}, </span>
+					<strong>z: </strong>
+					<span>{mouseWorld?.y ?? 0}</span>
+				</div>
+			{/if}
+			<div class="map-info-legend map-info-panel" class:map-info-legend-open={legendOpen}>
 				<div class="map-info-legend-header" on:click={(e) => handleClickMapLegendHeader(e)}>
 					<div class="map-info-legend-title">Legend</div>
 					<Fa icon={faChevronDown} />
@@ -306,22 +305,206 @@
 					</div>
 				</div>
 			</div>
-			{#if !forceHideCoordinates}
-				<div class="map-info-coords map-info-panel" class:map-info-coords-hidden={!mouseWorld}>
-					<strong>x: </strong>
-					<span>{mouseWorld?.x ?? 0}, </span>
-					<strong>z: </strong>
-					<span>{mouseWorld?.y ?? 0}</span>
-				</div>
-			{/if}
 		</div>
 	{/if}
 </div>
 
 <style lang="scss">
+	#map-container {
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
+
+		--map-overlay-margin: 10px;
+
+		.map-info-panels {
+			display: flex;
+			flex-direction: row;
+			align-items: flex-start;
+			gap: 0.5rem;
+			position: absolute;
+			top: var(--map-overlay-margin);
+			right: var(--map-overlay-margin);
+			max-height: calc(100% - (10px * 2));
+			overflow: hidden;
+			z-index: 401;
+
+			.map-info-panel {
+				background: var(--surface-100);
+				border: 1px solid var(--surface-300);
+				border-radius: 4px;
+				padding: 0.5rem;
+				color: var(--text-color);
+				box-shadow: 0 0px 8px rgb(0 0 0 / 40%);
+			}
+		}
+
+		.map-info-legend {
+			display: flex;
+			flex-direction: column;
+			align-self: stretch;
+			width: 225px;
+			padding: 0 !important;
+			max-height: 100%;
+
+			.map-info-legend-header {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				border-bottom: 1px solid var(--surface-300);
+				width: 100%;
+				font-size: 1rem;
+				font-weight: bold;
+				padding: 0.65rem 0.75rem;
+				cursor: pointer;
+
+				transition: background 0.2s ease 0s;
+
+				&:hover {
+					// background: var(--surface-200);
+				}
+			}
+
+			.map-info-legend-content {
+				display: flex;
+				flex-direction: column;
+				height: 100%;
+				overflow: hidden;
+				// max-height: 450px;
+
+				.map-info-legend-content-filter {
+					display: flex;
+
+					:global {
+						> * {
+							width: 100%;
+						}
+
+						.map-info-legend-content-filter-input {
+							width: 100%;
+							border-radius: 0;
+							padding: 0.75rem;
+							max-height: 35px;
+							background: var(--surface-150);
+
+							&:not(:focus) {
+								border-color: transparent;
+								border-bottom-color: var(--surface-200);
+							}
+
+							&:focus {
+							}
+						}
+					}
+				}
+				.map-info-legend-content-sections {
+					display: flex;
+					flex-direction: column;
+					overflow: auto;
+					flex: 1;
+				}
+
+				.map-info-legend-content-section {
+					display: flex;
+					flex-direction: column;
+					// height: 100%;
+
+					&:not(:last-of-type) {
+						.map-info-legend-content-section-header {
+							border-bottom: 1px solid var(--surface-200);
+						}
+					}
+
+					.map-info-legend-content-section-header {
+						display: flex;
+						justify-content: space-between;
+						align-items: center;
+						font-size: 0.85rem;
+						font-weight: bold;
+						gap: 0.5rem;
+						padding: 0.65rem 0.75rem;
+						cursor: pointer;
+						position: sticky;
+						top: 0;
+						background: var(--surface-100);
+
+						&:hover {
+							// background: var(--surface-200);
+						}
+
+						.map-info-legend-content-section-title {
+						}
+					}
+
+					.map-info-legend-content-section-content {
+						display: flex;
+						flex-direction: column;
+						background: var(--surface-150);
+
+						.map-info-legend-content-section-content-list {
+							display: flex;
+							flex-direction: column;
+
+							.map-info-legend-content-section-content-list-item {
+								font-size: 14px;
+								padding: 0.65rem 0.75rem;
+								cursor: pointer;
+
+								&:hover {
+									background: var(--surface-200);
+								}
+							}
+						}
+					}
+				}
+			}
+
+			&:not(.map-info-legend-open) {
+				.map-info-legend-content {
+					display: none;
+				}
+			}
+
+			&.map-info-legend-open {
+				.map-info-legend-header {
+					// background: var(--surface-150);
+
+					&:hover {
+						// background: var(--surface-200);
+					}
+				}
+			}
+		}
+
+		.map-info-coords {
+			font-size: 0.9rem;
+			opacity: 1;
+
+			transition: opacity 0.2s ease 0s;
+
+			&.map-info-coords-hidden {
+				opacity: 0;
+			}
+		}
+	}
+
 	:global {
-		#map {
+		#map-container {
 			position: relative;
+			height: 100%;
+			width: 100%;
+
+			.leaflet-left .leaflet-control {
+				margin-left: var(--map-overlay-margin);
+			}
+
+			.leaflet-top .leaflet-control {
+				margin-top: var(--map-overlay-margin);
+			}
+		}
+
+		#map {
+			// position: relative;
 			height: 100%;
 			width: 100%;
 			// max-width: var(--map-size);
@@ -391,173 +574,6 @@
 					border: none;
 				}
 			}
-		}
-	}
-
-	.map-info-panels {
-		display: flex;
-		flex-direction: column;
-		align-items: flex-end;
-		gap: 0.5rem;
-		position: absolute;
-		top: 10px;
-		right: 10px;
-		z-index: 401;
-
-		.map-info-panel {
-			background: var(--surface-100);
-			border: 1px solid var(--surface-300);
-			border-radius: 4px;
-			padding: 0.5rem;
-			color: var(--text-color);
-			box-shadow: 0 0px 8px rgb(0 0 0 / 40%);
-		}
-	}
-
-	.map-info-legend {
-		display: flex;
-		flex-direction: column;
-		width: 225px;
-		padding: 0 !important;
-		max-height: 500px;
-		overflow: hidden;
-
-		.map-info-legend-header {
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-			border-bottom: 1px solid var(--surface-300);
-			width: 100%;
-			font-size: 1rem;
-			font-weight: bold;
-			padding: 0.5rem 0.75rem;
-			cursor: pointer;
-
-			transition: background 0.2s ease 0s;
-
-			&:hover {
-				// background: var(--surface-200);
-			}
-		}
-
-		.map-info-legend-content {
-			display: flex;
-			flex-direction: column;
-			height: 100%;
-			overflow: hidden;
-			// max-height: 450px;
-
-			.map-info-legend-content-filter {
-				display: flex;
-
-				:global {
-					> * {
-						width: 100%;
-					}
-
-					.map-info-legend-content-filter-input {
-						width: 100%;
-						border-radius: 0;
-						padding: 0.75rem;
-						max-height: 35px;
-						background: var(--surface-150);
-
-						&:not(:focus) {
-							border-color: transparent;
-							border-bottom-color: var(--surface-200);
-						}
-
-						&:focus {
-						}
-					}
-				}
-			}
-			.map-info-legend-content-sections {
-				display: flex;
-				flex-direction: column;
-				overflow: auto;
-				flex: 1;
-			}
-
-			.map-info-legend-content-section {
-				display: flex;
-				flex-direction: column;
-				height: 100%;
-
-				&:not(:last-of-type) {
-					.map-info-legend-content-section-header {
-						border-bottom: 1px solid var(--surface-200);
-					}
-				}
-
-				.map-info-legend-content-section-header {
-					display: flex;
-					justify-content: space-between;
-					align-items: center;
-					font-size: 0.85rem;
-					font-weight: bold;
-					gap: 0.5rem;
-					padding: 0.5rem 0.75rem;
-					cursor: pointer;
-					position: sticky;
-					top: 0;
-					background: var(--surface-100);
-
-					&:hover {
-						// background: var(--surface-200);
-					}
-
-					.map-info-legend-content-section-title {
-					}
-				}
-
-				.map-info-legend-content-section-content {
-					display: flex;
-					flex-direction: column;
-					background: var(--surface-150);
-
-					.map-info-legend-content-section-content-list {
-						display: flex;
-						flex-direction: column;
-
-						.map-info-legend-content-section-content-list-item {
-							padding: 0.5rem 0.75rem;
-							cursor: pointer;
-
-							&:hover {
-								background: var(--surface-200);
-							}
-						}
-					}
-				}
-			}
-		}
-
-		&:not(.map-info-legend-open) {
-			.map-info-legend-content {
-				display: none;
-			}
-		}
-
-		&.map-info-legend-open {
-			.map-info-legend-header {
-				// background: var(--surface-150);
-
-				&:hover {
-					// background: var(--surface-200);
-				}
-			}
-		}
-	}
-
-	.map-info-coords {
-		font-size: 0.9rem;
-		opacity: 1;
-
-		transition: opacity 0.2s ease 0s;
-
-		&.map-info-coords-hidden {
-			opacity: 0;
 		}
 	}
 </style>
