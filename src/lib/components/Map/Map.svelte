@@ -1,3 +1,6 @@
+<script lang="ts" context="module">
+</script>
+
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { ItemDef } from 'src/interfaces/game/item-defs';

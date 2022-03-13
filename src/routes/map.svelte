@@ -21,6 +21,8 @@
 <script lang="ts">
 	import Map from '$lib/components/Map/Map.svelte';
 
+	export const prerender = false;
+
 	export let itemDefs: ItemDef[];
 </script>
 
@@ -34,5 +36,6 @@
 		max-height: calc(100vh - var(--header-height));
 		max-width: 100vw;
 		padding: 0;
+		overflow: hidden;
 	}
 </style>

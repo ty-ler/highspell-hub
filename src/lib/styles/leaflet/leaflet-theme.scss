@@ -26,6 +26,7 @@
 		background: var(--surface-100) !important;
 		color: var(--text-color) !important;
 		border-color: var(--surface-300) !important;
+		user-select: none;
 
 		transition: all 0.2s ease 0s;
 

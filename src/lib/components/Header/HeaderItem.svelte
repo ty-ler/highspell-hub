@@ -24,6 +24,7 @@
 		font-size: 1rem;
 		text-decoration: none;
 		color: var(--text-color);
+		user-select: none;
 
 		&.active {
 			// color: var(--text-color-secondary);
