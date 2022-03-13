@@ -6647,11 +6647,11 @@
           "odds": 0.1
         },
         {
-          "itemId": 6,
-          "name": "coins",
-          "amount": 10,
+          "itemId": 224,
+          "name": "starfish",
+          "amount": 1,
           "isIOU": false,
-          "odds": 0.08
+          "odds": 0.075
         },
         {
           "itemId": 364,
@@ -6665,7 +6665,7 @@
           "name": "coins",
           "amount": 15,
           "isIOU": false,
-          "odds": 0.05
+          "odds": 0.075
         },
         {
           "itemId": 346,
@@ -6679,13 +6679,6 @@
           "name": "headless arrows",
           "amount": 10,
           "isIOU": false,
-          "odds": 0.05
-        },
-        {
-          "itemId": 70,
-          "name": "bronze bar",
-          "amount": 2,
-          "isIOU": true,
           "odds": 0.05
         },
         {
@@ -6722,6 +6715,13 @@
           "amount": 5,
           "isIOU": false,
           "odds": 0.05
+        },
+        {
+          "itemId": 6,
+          "name": "coins",
+          "amount": 20,
+          "isIOU": false,
+          "odds": 0.03
         },
         {
           "itemId": 268,

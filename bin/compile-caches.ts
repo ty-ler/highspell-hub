@@ -8,9 +8,9 @@ import {
 	itemNameToFileName,
 	writeJsonToFile
 } from '../lib';
-import type { ItemDef } from 'src/interfaces/item-defs';
+import type { ItemDef } from 'src/interfaces/game/item-defs';
 import sharp from 'sharp';
-import type { GroundItem } from 'src/interfaces/ground-items';
+import type { GroundItem } from 'src/interfaces/game/ground-items';
 
 const EXTRACT_ITEM_IMAGES: boolean = false;
 

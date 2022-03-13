@@ -1,3 +1,46 @@
+@import './ress.scss';
+@import './table.scss';
+@import './vars.scss';
+@import './leaflet/leaflet.scss';
+@import './leaflet/leaflet-theme.scss';
+@import './leaflet//leaflet.rrose.scss';
+
+:root {
+	--app-width: 1200px;
+
+	--surface-0: #{$base-surface};
+	--surface-25: #{lighten($base-surface, 2.5%)};
+	--surface-50: #{lighten($base-surface, 5%)};
+	--surface-100: #{lighten($base-surface, 10%)};
+	--surface-150: #{lighten($base-surface, 15%)};
+	--surface-200: #{lighten($base-surface, 20%)};
+	--surface-300: #{lighten($base-surface, 30%)};
+	--surface-400: #{lighten($base-surface, 40%)};
+	--surface-500: #{lighten($base-surface, 50%)};
+	--surface-600: #{lighten($base-surface, 60%)};
+
+	--border-color: #{lighten($base-surface, 8%)};
+	--border-radius: 4px;
+
+	--text-color: #{$base-text-color};
+	--text-color-secondary: #{darken($base-text-color, 20%)};
+
+	--color-primary: #{$color-primary};
+	--color-info: #{$color-info};
+	--color-success: #{$color-success};
+	--color-warn: #{$color-warn};
+	--color-danger: #{$color-danger};
+
+	--color-primary-hover: #{darken($color-primary, 5%)};
+	--color-info-hover: #{darken($color-info, 5%)};
+	--color-success-hover: #{darken($color-success, 5%)};
+	--color-warn-hover: #{darken($color-warn, 5%)};
+	--color-danger-hover: #{darken($color-danger, 5%)};
+
+	--scrollbar-knob-color: var(--surface-500);
+	--scrollbar-background-color: var(--surface-100);
+}
+
 body,
 html {
 	padding: 0;
@@ -5,6 +48,8 @@ html {
 	font-family: Arial, Helvetica, sans-serif;
 	overflow: hidden;
 	height: 100vh;
+	background: var(--surface-0);
+	color: var(--text-color);
 }
 
 select,
@@ -27,8 +72,29 @@ input[type='color'] {
 	font-size: 16px;
 }
 
-:root {
-	--app-width: 1200px;
+a {
+	color: var(--text-color);
+}
+
+/* Works on Firefox */
+* {
+	scrollbar-width: thin;
+	scrollbar-color: var(--scrollbar-knob-color) var(--scrollbar-background-color);
+}
+
+/* Works on Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+	width: 12px;
+}
+
+*::-webkit-scrollbar-track {
+	background: var(--scrollbar-background-color);
+}
+
+*::-webkit-scrollbar-thumb {
+	background-color: var(--scrollbar-knob-color);
+	border-radius: 20px;
+	border: 3px solid var(--scrollbar-background-color);
 }
 
 #svelte {
@@ -43,17 +109,4 @@ input[type='color'] {
 
 .no-select {
 	user-select: none;
-}
-
-.main-content-container {
-	display: flex;
-	justify-content: center;
-	overflow: auto;
-	height: 100%;
-}
-
-.main-content {
-	width: 100%;
-	max-width: var(--app-width);
-	// margin: 0 auto;
 }

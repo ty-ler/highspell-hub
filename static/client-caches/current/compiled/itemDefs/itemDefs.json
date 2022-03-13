@@ -717,7 +717,7 @@
     "edibleEffects": [
       {
         "skill": "hitpoints",
-        "amount": 12
+        "amount": 10
       }
     ],
     "equippableEffects": null,
@@ -933,7 +933,7 @@
     "name": "raw tuna",
     "description": "An ordinary blue-finned tunafish",
     "isNamePlural": false,
-    "cost": 30,
+    "cost": 60,
     "isStackable": false,
     "isTradeable": true,
     "isForMission": false,
@@ -946,10 +946,10 @@
     "equipmentType": null,
     "equipmentSpriteId": null,
     "equipmentSpriteSheet": null,
-    "resourceProbability": 0.9,
+    "resourceProbability": 0.85,
     "expFromObtaining": {
       "skill": "fishing",
-      "amount": 70
+      "amount": 110
     },
     "recipe": null,
     "metalType": null,
@@ -960,7 +960,7 @@
     "name": "tuna",
     "description": "A cooked tuna",
     "isNamePlural": false,
-    "cost": 30,
+    "cost": 60,
     "isStackable": false,
     "isTradeable": true,
     "isForMission": false,
@@ -972,7 +972,7 @@
     "edibleEffects": [
       {
         "skill": "hitpoints",
-        "amount": 10
+        "amount": 12
       }
     ],
     "equippableEffects": null,
@@ -980,10 +980,10 @@
     "equipmentType": null,
     "equipmentSpriteId": null,
     "equipmentSpriteSheet": null,
-    "resourceProbability": 0.225,
+    "resourceProbability": 0.17,
     "expFromObtaining": {
       "skill": "cooking",
-      "amount": 80
+      "amount": 110
     },
     "recipe": null,
     "metalType": null,
@@ -2818,6 +2818,10 @@
       {
         "skill": "defense",
         "amount": 3
+      },
+      {
+        "skill": "accuracy",
+        "amount": 1
       }
     ],
     "equippableRequirements": [
@@ -2901,7 +2905,11 @@
     "equippableEffects": [
       {
         "skill": "defense",
-        "amount": 9
+        "amount": 14
+      },
+      {
+        "skill": "accuracy",
+        "amount": 1
       }
     ],
     "equippableRequirements": [
@@ -2947,7 +2955,11 @@
     "equippableEffects": [
       {
         "skill": "defense",
-        "amount": 13
+        "amount": 21
+      },
+      {
+        "skill": "accuracy",
+        "amount": 1
       }
     ],
     "equippableRequirements": [
@@ -2993,7 +3005,11 @@
     "equippableEffects": [
       {
         "skill": "defense",
-        "amount": 17
+        "amount": 29
+      },
+      {
+        "skill": "accuracy",
+        "amount": 1
       }
     ],
     "equippableRequirements": [
@@ -4714,6 +4730,10 @@
       {
         "skill": "defense",
         "amount": 3
+      },
+      {
+        "skill": "accuracy",
+        "amount": 2
       }
     ],
     "equippableRequirements": [
@@ -4770,6 +4790,10 @@
       {
         "skill": "defense",
         "amount": 4
+      },
+      {
+        "skill": "accuracy",
+        "amount": 3
       }
     ],
     "equippableRequirements": [
@@ -4815,6 +4839,10 @@
       {
         "skill": "defense",
         "amount": 5
+      },
+      {
+        "skill": "accuracy",
+        "amount": 4
       }
     ],
     "equippableRequirements": [
@@ -5695,7 +5723,11 @@
     "equippableEffects": [
       {
         "skill": "defense",
-        "amount": 6
+        "amount": 8
+      },
+      {
+        "skill": "accuracy",
+        "amount": 1
       }
     ],
     "equippableRequirements": [
@@ -5787,8 +5819,12 @@
     "edibleEffects": null,
     "equippableEffects": [
       {
-        "skill": "accuracy",
+        "skill": "defense",
         "amount": 2
+      },
+      {
+        "skill": "accuracy",
+        "amount": 1
       }
     ],
     "equippableRequirements": [
@@ -6011,7 +6047,7 @@
     "equippableEffects": [
       {
         "skill": "defense",
-        "amount": 34
+        "amount": 33
       }
     ],
     "equippableRequirements": [
@@ -11289,7 +11325,11 @@
       },
       {
         "skill": "strength",
-        "amount": 2
+        "amount": 3
+      },
+      {
+        "skill": "accuracy",
+        "amount": 1
       }
     ],
     "equippableRequirements": [
@@ -11326,11 +11366,15 @@
     "equippableEffects": [
       {
         "skill": "defense",
-        "amount": 7
+        "amount": 8
       },
       {
         "skill": "strength",
         "amount": 2
+      },
+      {
+        "skill": "accuracy",
+        "amount": 1
       }
     ],
     "equippableRequirements": [
@@ -11513,6 +11557,10 @@
       {
         "skill": "defense",
         "amount": 6
+      },
+      {
+        "skill": "accuracy",
+        "amount": 5
       }
     ],
     "equippableRequirements": [
@@ -12069,7 +12117,11 @@
     "equippableEffects": [
       {
         "skill": "defense",
-        "amount": 33
+        "amount": 34
+      },
+      {
+        "skill": "accuracy",
+        "amount": 1
       }
     ],
     "equippableRequirements": [
@@ -14185,6 +14237,10 @@
       {
         "skill": "range",
         "amount": 10
+      },
+      {
+        "skill": "accuracy",
+        "amount": 1
       }
     ],
     "equippableRequirements": [
@@ -14226,6 +14282,10 @@
       {
         "skill": "magic",
         "amount": 11
+      },
+      {
+        "skill": "accuracy",
+        "amount": 1
       }
     ],
     "equippableRequirements": [
@@ -16846,6 +16906,10 @@
       },
       {
         "skill": "defense",
+        "amount": 4
+      },
+      {
+        "skill": "magic",
         "amount": 4
       }
     ],

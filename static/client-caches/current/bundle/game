@@ -36,7 +36,7 @@
 <input type="hidden" id="server-id-input" value=1 />
 <input type="hidden" id="server-url" value=https://server1.highspell.com:8888 />
 <input type="hidden" id="chat-server-url" value="https://highspell.com:8765" />
-<script src="/js/client/client.21.js"></script>
+<script src="/js/client/client.23.js"></script>
             </main>
                         
             
