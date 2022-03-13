@@ -185,8 +185,7 @@
 				center: [MAP_CENTER, MAP_CENTER],
 				maxBoundsViscosity: 1,
 				maxZoom: MAP_MAX_ZOOM,
-				minZoom: MAP_MIN_ZOOM,
-				bounceAtZoomLimits: false
+				minZoom: MAP_MIN_ZOOM
 			});
 
 			const mapBounds = new L.LatLngBounds([
@@ -500,16 +499,16 @@
 		}
 	}
 
-	@media not all and (min-resolution: 0.001dpcm) {
-		@supports (-webkit-appearance: none) and (stroke-color: transparent) {
-			.map-info-panels {
-				// --test: -webkit-fill-available;
+	// @media not all and (min-resolution: 0.001dpcm) {
+	// 	@supports (-webkit-appearance: none) and (stroke-color: transparent) {
+	// 		.map-info-panels {
+	// 			// --test: -webkit-fill-available;
 
-				// max-height: #{calc(var(--test) - 100px)} !important;
-				max-height: 100%;
-			}
-		}
-	}
+	// 			// max-height: #{calc(var(--test) - 100px)} !important;
+	// 			max-height: 100%;
+	// 		}
+	// 	}
+	// }
 
 	:global {
 		#map-container {
