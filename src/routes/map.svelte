@@ -31,6 +31,7 @@
 <style lang="scss">
 	.map-main-content {
 		height: calc(100vh - var(--header-height));
+		max-height: calc(100vh - var(--header-height));
 		max-width: 100vw;
 		padding: 0;
 	}
