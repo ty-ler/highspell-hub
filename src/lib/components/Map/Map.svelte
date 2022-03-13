@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import type { LeafletMouseEvent } from 'leaflet';
 	import type { ItemDef } from 'src/interfaces/game/item-defs';
 	import Fa from 'svelte-fa/src/fa.svelte';
 	import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
@@ -33,6 +32,7 @@
 	} from '$lib/common/map/helpers';
 	import { delay } from '$lib/utils/delay';
 	import { orderBy } from 'lodash-es';
+	import { browser } from '$app/env';
 
 	export let itemDefs: ItemDef[];
 
@@ -51,7 +51,7 @@
 		itemDefs = orderBy(itemDefs, (i) => i.name);
 	}
 
-	const handleMapMouseMove = (e: LeafletMouseEvent) => {
+	const handleMapMouseMove = (e: L.LeafletMouseEvent) => {
 		const { latlng } = e;
 		const pixelX = latlng.lng;
 		const pixelY = latlng.lat;
@@ -76,7 +76,7 @@
 		};
 	};
 
-	const handleMapMouseOut = (e: LeafletMouseEvent) => {
+	const handleMapMouseOut = (e: L.LeafletMouseEvent) => {
 		mouseWorld = null;
 		mousePixel = null;
 	};
@@ -179,47 +179,48 @@
 	};
 
 	const buildMap = async () => {
-		// Import leaflet and assign to constant
-		const L = await (await import('leaflet')).default;
+		if (browser) {
+			mapReady = false;
 
-		mapReady = false;
+			const L = window.L;
 
-		map = L.map('map', {
-			crs: L.CRS.Simple,
-			center: [MAP_CENTER, MAP_CENTER],
-			maxBoundsViscosity: 1,
-			maxZoom: MAP_MAX_ZOOM,
-			minZoom: MAP_MIN_ZOOM,
-			bounceAtZoomLimits: false
-		});
+			map = L.map('map', {
+				crs: L.CRS.Simple,
+				center: [MAP_CENTER, MAP_CENTER],
+				maxBoundsViscosity: 1,
+				maxZoom: MAP_MAX_ZOOM,
+				minZoom: MAP_MIN_ZOOM,
+				bounceAtZoomLimits: false
+			});
 
-		const mapBounds = new L.LatLngBounds([
-			[0, MAP_SIZE],
-			[MAP_SIZE, 0]
-		]);
+			const mapBounds = new L.LatLngBounds([
+				[0, MAP_SIZE],
+				[MAP_SIZE, 0]
+			]);
 
-		map.setView([MAP_CENTER, MAP_CENTER], MAP_DEFAULT_ZOOM);
-		map.setMaxBounds(mapBounds);
+			map.setView([MAP_CENTER, MAP_CENTER], MAP_DEFAULT_ZOOM);
+			map.setMaxBounds(mapBounds);
 
-		L.imageOverlay(`/client-caches/current/gameAssets/${MAP_OVERWORLD_FILENAME}`, mapBounds).addTo(
-			map
-		);
-		L.imageOverlay(
-			`/client-caches/current/gameAssets/${MAP_OVERWORLD_MINIMAP_FILENAME}`,
-			mapBounds
-		).addTo(map);
+			L.imageOverlay(
+				`/client-caches/current/gameAssets/${MAP_OVERWORLD_FILENAME}`,
+				mapBounds
+			).addTo(map);
+			L.imageOverlay(
+				`/client-caches/current/gameAssets/${MAP_OVERWORLD_MINIMAP_FILENAME}`,
+				mapBounds
+			).addTo(map);
 
-		map.addEventListener('mouseout', (e: LeafletMouseEvent) => handleMapMouseOut(e));
-		map.addEventListener('mousemove', (e: LeafletMouseEvent) => handleMapMouseMove(e));
+			map.addEventListener('mouseout', (e: L.LeafletMouseEvent) => handleMapMouseOut(e));
+			map.addEventListener('mousemove', (e: L.LeafletMouseEvent) => handleMapMouseMove(e));
 
-		groundItemMarkers = addGroundItemsMarkers(itemDefs, map);
-		locationMarkers = addLocationMarkers(locations, map);
+			groundItemMarkers = addGroundItemsMarkers(itemDefs, map);
+			locationMarkers = addLocationMarkers(locations, map);
 
-		mapReady = true;
+			mapReady = true;
+		}
 	};
 
 	onMount(async () => {
-		await delay();
 		await buildMap();
 	});
 </script>

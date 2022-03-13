@@ -6,3 +6,4 @@ export const MAP_DEFAULT_ZOOM = 2;
 export const MAP_MIN_ZOOM = 0;
 export const MAP_MAX_ZOOM = 3;
 export const MAP_DEFAULT_TILE_SIZE = 256;
+export const L = window.L;

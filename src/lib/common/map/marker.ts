@@ -1,6 +1,6 @@
-import L from 'leaflet';
 import type { ItemDef } from 'src/interfaces/game/item-defs';
 import type { Location } from '$lib/common/locations';
+import { L } from './constants';
 import { worldXToPixel, worldYToPixel } from './helpers';
 
 export const hideMarker = (marker: L.Marker) => {
