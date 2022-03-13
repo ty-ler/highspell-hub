@@ -32,7 +32,7 @@
 		worldYToPixel
 	} from '$lib/common/map/helpers';
 	import { delay } from '$lib/utils/delay';
-	import { orderBy } from 'lodash';
+	import { orderBy } from 'lodash-es';
 
 	export let itemDefs: ItemDef[];
 

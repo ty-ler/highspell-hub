@@ -3,7 +3,7 @@ import {
 	MAP_MAX_ZOOM,
 	MAP_OVERWORLD_FILENAME,
 	MAP_SIZE
-} from '$lib/common/map';
+} from '$lib/common/map/constants';
 import type { Load } from '@sveltejs/kit';
 import fetch from 'node-fetch';
 import sharp from 'sharp';

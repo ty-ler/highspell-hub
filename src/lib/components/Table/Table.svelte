@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { orderBy } from 'lodash';
+	import { orderBy } from 'lodash-es';
 	import { createEventDispatcher } from 'svelte';
 	import InputText from '../InputText/InputText.svelte';
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { max } from 'lodash';
+	import { max } from 'lodash-es';
 
 	import type { NpcLootTable } from 'src/interfaces/npc-loot';
 	import Table from '../Table/Table.svelte';

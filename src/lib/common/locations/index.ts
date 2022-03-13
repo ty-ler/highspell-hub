@@ -1,4 +1,4 @@
-import { orderBy } from 'lodash';
+import { orderBy } from 'lodash-es';
 import type { CSSStyles } from 'src/interfaces/common/style';
 
 export interface Location {

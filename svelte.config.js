@@ -2,6 +2,7 @@
 // import adapter from '@sveltejs/adapter-static';
 import adapter from '@sveltejs/adapter-vercel';
 import preprocess from 'svelte-preprocess';
+import { resolve } from 'path';
 
 const prod = process.env.NODE_ENV === 'production';
 
@@ -10,7 +11,7 @@ const config = {
 	// Consult https://github.com/sveltejs/svelte-preprocess
 	// for more information about preprocessors
 	preprocess: preprocess(),
-
+	css: { preprocessorOptions: { scss: { charset: false } } },
 	kit: {
 		// adapter: adapter(),
 		adapter: adapter(),
