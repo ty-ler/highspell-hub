@@ -22,6 +22,7 @@
 		"@sveltejs/adapter-static": "^1.0.0-next.26",
 		"@sveltejs/adapter-vercel": "^1.0.0-next.40",
 		"@sveltejs/kit": "next",
+		"@types/body-scroll-lock": "^3.1.0",
 		"@types/d3": "^7.1.0",
 		"@types/leaflet": "^1.7.9",
 		"@types/lodash-es": "^4.17.6",
@@ -48,6 +49,7 @@
 	"type": "module",
 	"dependencies": {
 		"@fortawesome/free-solid-svg-icons": "^5.15.4",
+		"body-scroll-lock": "^4.0.0-beta.0",
 		"d3": "^7.3.0",
 		"d3-zoom": "^3.0.0",
 		"lodash-es": "^4.17.21",

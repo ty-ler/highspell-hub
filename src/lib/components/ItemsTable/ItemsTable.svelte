@@ -35,7 +35,6 @@
 		}
 	]}
 	sticky
-	stickyTop="var(--header-height)"
 	showFilter
 	canClickRow
 	canHover

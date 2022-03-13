@@ -1,5 +1,16 @@
 <script lang="ts">
 	import Header from '$lib/components/Header/Header.svelte';
+	import { onMount } from 'svelte';
+	import { disableBodyScroll } from 'body-scroll-lock';
+
+	onMount(() => {
+		const mainContentContainer = document.querySelector('.main-content-container');
+
+		if (!mainContentContainer) throw new Error('Failed to get main content container');
+
+		console.log('Disabling body scroll!');
+		disableBodyScroll(mainContentContainer);
+	});
 </script>
 
 <Header />
@@ -12,16 +23,14 @@
 		@import '../lib/styles/styles.scss';
 
 		.main-content-container {
-			// overflow: auto;
 			height: 100%;
 			width: 100%;
-			padding-top: var(--header-height);
-			// height: calc(100vh - var(--header-height));
+			overflow: auto;
 		}
 
 		.main-content {
 			width: 100%;
-			height: 100%;
+			// height: 100%;
 			max-width: var(--app-width);
 			padding: 1rem;
 			margin: 0 auto;
