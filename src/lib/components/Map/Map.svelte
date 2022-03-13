@@ -327,9 +327,14 @@
 			align-items: flex-start;
 			gap: 0.5rem;
 			position: absolute;
-			top: var(--map-overlay-margin);
-			right: var(--map-overlay-margin);
-			max-height: calc(100% - (10px * 2));
+			// top: var(--map-overlay-margin);
+			// right: var(--map-overlay-margin);
+			right: 0;
+			margin-top: var(--map-overlay-margin);
+			margin-right: var(--map-overlay-margin);
+			padding-bottom: calc(var(--map-overlay-margin) * 2);
+			// max-height: calc(100% - (10px * 2));
+			max-height: 100%;
 			overflow: hidden;
 			z-index: 401;
 			pointer-events: none;
@@ -491,6 +496,17 @@
 
 			&.map-info-coords-hidden {
 				opacity: 0;
+			}
+		}
+	}
+
+	@media not all and (min-resolution: 0.001dpcm) {
+		@supports (-webkit-appearance: none) and (stroke-color: transparent) {
+			.map-info-panels {
+				// --test: -webkit-fill-available;
+
+				// max-height: #{calc(var(--test) - 100px)} !important;
+				max-height: 100%;
 			}
 		}
 	}

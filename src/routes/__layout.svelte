@@ -34,7 +34,9 @@
 			height: 100%;
 			width: 100%;
 
-			// overflow: auto;
+			&.main-content-container-fullscreen {
+				overflow: hidden;
+			}
 		}
 
 		.main-content {
@@ -48,7 +50,7 @@
 				--main-content-fullscreen-height: calc(100vh - var(--header-height));
 
 				height: var(--main-content-fullscreen-height) !important;
-				min-height: var(--main-content-fullscreen-height) !important;
+				min-height: -webkit-fill-available !important;
 				max-height: -webkit-fill-available !important;
 				overflow: hidden !important;
 			}
@@ -66,10 +68,6 @@
 			@supports (-webkit-appearance: none) and (stroke-color: transparent) {
 				.main-content-container {
 					max-height: -webkit-fill-available;
-
-					&.main-content-container-fullscreen {
-						overflow: hidden;
-					}
 				}
 			}
 		}
