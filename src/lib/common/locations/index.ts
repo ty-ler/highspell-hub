@@ -252,7 +252,7 @@ export const locations: Location[] = orderBy(
 			y: -26
 		},
 		{
-			name: 'Citrine City',
+			name: 'Ictrine City',
 			x: 12,
 			y: 208,
 			style: {
