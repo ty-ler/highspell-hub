@@ -6518,7 +6518,12 @@
       "equip"
     ],
     "edibleEffects": null,
-    "equippableEffects": null,
+    "equippableEffects": [
+      {
+        "skill": "crime",
+        "amount": 1
+      }
+    ],
     "equippableRequirements": null,
     "equipmentType": "helmet",
     "equipmentSpriteId": 15,
@@ -6552,6 +6557,10 @@
       {
         "skill": "strength",
         "amount": 2
+      },
+      {
+        "skill": "crime",
+        "amount": 1
       }
     ],
     "equippableRequirements": [

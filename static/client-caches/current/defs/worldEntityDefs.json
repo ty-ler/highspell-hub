@@ -522,7 +522,8 @@
     "maxResourcesPerSpawn": null,
     "minResourcesPerSpawn": null,
     "useItemWithEntityActions": null,
-    "canProjectile": true
+    "canProjectile": true,
+    "worldEntityLootId": 2
   },
   {
     "_id": 31,
@@ -550,7 +551,8 @@
     "maxResourcesPerSpawn": null,
     "minResourcesPerSpawn": null,
     "useItemWithEntityActions": null,
-    "canProjectile": false
+    "canProjectile": false,
+    "worldEntityLootId": 12
   },
   {
     "_id": 33,
@@ -1258,7 +1260,8 @@
     "maxResourcesPerSpawn": null,
     "minResourcesPerSpawn": null,
     "useItemWithEntityActions": null,
-    "canProjectile": true
+    "canProjectile": true,
+    "worldEntityLootId": 1
   },
   {
     "_id": 74,

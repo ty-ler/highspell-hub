@@ -5,6 +5,7 @@
     "description": "Just an ordinary guy",
     "moveEagerness": 0.5,
     "canShop": false,
+    "pickpocketId": 1,
     "combat": {
       "level": 5,
       "hitpoints": 12,
@@ -149,6 +150,7 @@
     "description": "He tends the crops",
     "moveEagerness": 0.4,
     "canShop": false,
+    "pickpocketId": 4,
     "combat": {
       "level": 5,
       "hitpoints": 13,
@@ -194,6 +196,7 @@
     "description": "Looks like he might rough me up",
     "moveEagerness": 0.4,
     "canShop": false,
+    "pickpocketId": 5,
     "combat": {
       "level": 10,
       "hitpoints": 16,
@@ -266,6 +269,7 @@
     "description": "He loves killing trees",
     "moveEagerness": 0.4,
     "canShop": false,
+    "pickpocketId": 3,
     "combat": {
       "level": 10,
       "hitpoints": 16,
@@ -356,6 +360,7 @@
     "description": "He catches fish for a living",
     "moveEagerness": 0.4,
     "canShop": false,
+    "pickpocketId": 2,
     "combat": {
       "level": 8,
       "hitpoints": 12,
@@ -482,6 +487,7 @@
     "description": "He longs to become a Royal Knight",
     "moveEagerness": 0.4,
     "canShop": false,
+    "pickpocketId": 8,
     "combat": {
       "level": 20,
       "hitpoints": 24,
@@ -527,6 +533,7 @@
     "description": "He's short tempered",
     "moveEagerness": 0.4,
     "canShop": false,
+    "pickpocketId": 7,
     "combat": {
       "level": 14,
       "hitpoints": 18,
@@ -572,6 +579,7 @@
     "description": "A noble warrior",
     "moveEagerness": 0.4,
     "canShop": false,
+    "pickpocketId": 9,
     "combat": {
       "level": 45,
       "hitpoints": 55,
@@ -617,6 +625,7 @@
     "description": "A noble warrior",
     "moveEagerness": 0.4,
     "canShop": false,
+    "pickpocketId": 11,
     "combat": {
       "level": 60,
       "hitpoints": 65,
@@ -662,6 +671,7 @@
     "description": "An old, noble warrior",
     "moveEagerness": 0.4,
     "canShop": false,
+    "pickpocketId": 15,
     "combat": {
       "level": 102,
       "hitpoints": 90,
@@ -851,6 +861,7 @@
     "description": "Looks like he might rough me up",
     "moveEagerness": 0.4,
     "canShop": false,
+    "pickpocketId": 6,
     "combat": {
       "level": 18,
       "hitpoints": 22,
@@ -941,6 +952,7 @@
     "description": "Hes got cool robes",
     "moveEagerness": 0.4,
     "canShop": false,
+    "pickpocketId": 10,
     "combat": {
       "level": 16,
       "hitpoints": 22,
@@ -989,6 +1001,7 @@
     "description": "A tiny little gnome",
     "moveEagerness": 0.4,
     "canShop": false,
+    "pickpocketId": 12,
     "combat": {
       "level": 8,
       "hitpoints": 12,
@@ -1124,6 +1137,7 @@
     "description": "Look at his tiny little armor",
     "moveEagerness": 0.4,
     "canShop": false,
+    "pickpocketId": 12,
     "combat": {
       "level": 30,
       "hitpoints": 32,
@@ -1214,6 +1228,7 @@
     "description": "A tiny little gnome getting his tan on",
     "moveEagerness": 0.4,
     "canShop": false,
+    "pickpocketId": 12,
     "combat": {
       "level": 18,
       "hitpoints": 25,
@@ -1286,6 +1301,7 @@
     "description": "Look at those ears",
     "moveEagerness": 0.4,
     "canShop": false,
+    "pickpocketId": 14,
     "combat": {
       "level": 35,
       "hitpoints": 45,
@@ -2015,6 +2031,7 @@
     "description": "Look at those ears",
     "moveEagerness": 0.4,
     "canShop": false,
+    "pickpocketId": 14,
     "combat": {
       "level": 35,
       "hitpoints": 45,
@@ -4205,6 +4222,7 @@
     "description": "Hes got cool robes",
     "moveEagerness": 0.4,
     "canShop": false,
+    "pickpocketId": 13,
     "combat": {
       "level": 40,
       "hitpoints": 45,

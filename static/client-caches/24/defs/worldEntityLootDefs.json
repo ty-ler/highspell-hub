@@ -1,0 +1,760 @@
+[
+  {
+    "_id": 1,
+    "desc": "Search Crate",
+    "xpRewards": [],
+    "requirements": [],
+    "baseProbabilityOfSuccess": 1,
+    "maxLvlProbabilityOfSuccess": 1,
+    "respawnTicks": 0,
+    "oddsOfHavingLootOnRespawn": 0.2,
+    "searchStartResult": [],
+    "searchEndResult": [],
+    "rareLootProbability": 0,
+    "rootLoot": null,
+    "baseLoot": [],
+    "loot": [
+      {
+        "itemId": 6,
+        "name": "coins",
+        "isIOU": false,
+        "amount": 2,
+        "odds": 0.5
+      },
+      {
+        "itemId": 6,
+        "name": "coins",
+        "isIOU": false,
+        "amount": 3,
+        "odds": 0.1
+      },
+      {
+        "itemId": 154,
+        "name": "chisel",
+        "isIOU": false,
+        "amount": 1,
+        "odds": 0.1
+      },
+      {
+        "itemId": 155,
+        "name": "hammer",
+        "isIOU": false,
+        "amount": 1,
+        "odds": 0.1
+      },
+      {
+        "itemId": 259,
+        "name": "vial",
+        "isIOU": false,
+        "amount": 1,
+        "odds": 0.05
+      },
+      {
+        "itemId": 326,
+        "name": "arrow shafts",
+        "isIOU": false,
+        "amount": 3,
+        "odds": 0.05
+      },
+      {
+        "itemId": 70,
+        "name": "bronze bar",
+        "isIOU": false,
+        "amount": 1,
+        "odds": 0.05
+      },
+      {
+        "itemId": 137,
+        "name": "leather gloves",
+        "isIOU": false,
+        "amount": 1,
+        "odds": 0.03
+      },
+      {
+        "itemId": 52,
+        "name": "bronze helm",
+        "isIOU": false,
+        "amount": 1,
+        "odds": 0.02
+      }
+    ]
+  },
+  {
+    "_id": 2,
+    "desc": "Search Chest",
+    "xpRewards": [],
+    "requirements": [],
+    "baseProbabilityOfSuccess": 1,
+    "maxLvlProbabilityOfSuccess": 1,
+    "respawnTicks": 0,
+    "oddsOfHavingLootOnRespawn": 0.05,
+    "searchStartResult": [],
+    "searchEndResult": [],
+    "rareLootProbability": 0,
+    "rootLoot": null,
+    "baseLoot": [],
+    "loot": [
+      {
+        "itemId": 6,
+        "name": "coins",
+        "isIOU": false,
+        "amount": 10,
+        "odds": 0.75
+      },
+      {
+        "itemId": 6,
+        "name": "coins",
+        "isIOU": false,
+        "amount": 20,
+        "odds": 0.25
+      }
+    ]
+  },
+  {
+    "_id": 3,
+    "desc": "Picklock chest, gives 10 coins",
+    "xpRewards": [
+      {
+        "skill": "crime",
+        "amount": 15
+      }
+    ],
+    "requirements": [
+      {
+        "desc": "player crime skill >= 10",
+        "type": "skill",
+        "skill": "crime",
+        "level": 10,
+        "operator": ">="
+      }
+    ],
+    "baseProbabilityOfSuccess": 0.1,
+    "maxLvlProbabilityOfSuccess": 0.75,
+    "respawnTicks": 20,
+    "oddsOfHavingLootOnRespawn": 1,
+    "searchStartResult": [],
+    "searchEndResult": [],
+    "rareLootProbability": 0,
+    "rootLoot": null,
+    "baseLoot": [
+      {
+        "itemId": 6,
+        "name": "coins",
+        "isIOU": false,
+        "amount": 10
+      }
+    ],
+    "loot": []
+  },
+  {
+    "_id": 4,
+    "desc": "Picklock chest, gives 50 coins",
+    "xpRewards": [
+      {
+        "skill": "crime",
+        "amount": 150
+      }
+    ],
+    "requirements": [
+      {
+        "desc": "player crime skill >= 35",
+        "type": "skill",
+        "skill": "crime",
+        "level": 35,
+        "operator": ">="
+      }
+    ],
+    "baseProbabilityOfSuccess": 0.1,
+    "maxLvlProbabilityOfSuccess": 0.5,
+    "respawnTicks": 180,
+    "oddsOfHavingLootOnRespawn": 1,
+    "searchStartResult": [],
+    "searchEndResult": [],
+    "rareLootProbability": 0,
+    "rootLoot": null,
+    "baseLoot": [
+      {
+        "itemId": 6,
+        "name": "coins",
+        "isIOU": false,
+        "amount": 50
+      }
+    ],
+    "loot": [
+      {
+        "itemId": 257,
+        "name": "golden gloves",
+        "isIOU": false,
+        "amount": 1,
+        "odds": 0.001
+      }
+    ]
+  },
+  {
+    "_id": 5,
+    "desc": "Picklock dwarven chest, gives mining supplies",
+    "xpRewards": [
+      {
+        "skill": "crime",
+        "amount": 200
+      }
+    ],
+    "requirements": [
+      {
+        "desc": "player crime skill >= 52",
+        "type": "skill",
+        "skill": "crime",
+        "level": 52,
+        "operator": ">="
+      }
+    ],
+    "baseProbabilityOfSuccess": 0.075,
+    "maxLvlProbabilityOfSuccess": 0.45,
+    "respawnTicks": 250,
+    "oddsOfHavingLootOnRespawn": 1,
+    "searchStartResult": [],
+    "searchEndResult": [],
+    "rareLootProbability": 0,
+    "rootLoot": null,
+    "baseLoot": [
+      {
+        "itemId": 6,
+        "name": "coins",
+        "isIOU": false,
+        "amount": 65
+      },
+      {
+        "itemId": 48,
+        "name": "palladium ore",
+        "isIOU": false,
+        "amount": 1
+      }
+    ],
+    "loot": [
+      {
+        "itemId": 79,
+        "name": "iron ore",
+        "isIOU": true,
+        "amount": 2,
+        "odds": 0.5
+      },
+      {
+        "itemId": 142,
+        "name": "coal",
+        "isIOU": true,
+        "amount": 5,
+        "odds": 0.1
+      },
+      {
+        "itemId": 51,
+        "name": "coronium ore",
+        "isIOU": false,
+        "amount": 1,
+        "odds": 0.001
+      },
+      {
+        "itemId": 252,
+        "name": "celadium ore",
+        "isIOU": false,
+        "amount": 1,
+        "odds": 0.00025
+      }
+    ]
+  },
+  {
+    "_id": 6,
+    "desc": "Picklock Julian's chest",
+    "xpRewards": [
+      {
+        "skill": "crime",
+        "amount": 300
+      }
+    ],
+    "requirements": [
+      {
+        "desc": "player crime skill >= 67",
+        "type": "skill",
+        "skill": "crime",
+        "level": 67,
+        "operator": ">="
+      }
+    ],
+    "baseProbabilityOfSuccess": 0.05,
+    "maxLvlProbabilityOfSuccess": 0.3,
+    "respawnTicks": 300,
+    "oddsOfHavingLootOnRespawn": 1,
+    "searchStartResult": [],
+    "searchEndResult": [],
+    "rareLootProbability": 0,
+    "rootLoot": null,
+    "baseLoot": [
+      {
+        "itemId": 6,
+        "name": "coins",
+        "isIOU": false,
+        "amount": 150
+      }
+    ],
+    "loot": [
+      {
+        "itemId": 80,
+        "name": "amethyst gem",
+        "isIOU": false,
+        "amount": 1,
+        "odds": 0.25
+      },
+      {
+        "itemId": 81,
+        "name": "sapphire gem",
+        "isIOU": false,
+        "amount": 1,
+        "odds": 0.1
+      },
+      {
+        "itemId": 82,
+        "name": "emerald gem",
+        "isIOU": false,
+        "amount": 1,
+        "odds": 0.05
+      },
+      {
+        "itemId": 83,
+        "name": "topaz gem",
+        "isIOU": false,
+        "amount": 1,
+        "odds": 0.025
+      },
+      {
+        "itemId": 84,
+        "name": "citrine gem",
+        "isIOU": false,
+        "amount": 1,
+        "odds": 0.0125
+      },
+      {
+        "itemId": 85,
+        "name": "ruby gem",
+        "isIOU": false,
+        "amount": 1,
+        "odds": 0.0075
+      },
+      {
+        "itemId": 86,
+        "name": "diamond gem",
+        "isIOU": false,
+        "amount": 1,
+        "odds": 0.00375
+      }
+    ]
+  },
+  {
+    "_id": 7,
+    "desc": "Picklock armour plater's chest",
+    "xpRewards": [
+      {
+        "skill": "crime",
+        "amount": 250
+      }
+    ],
+    "requirements": [
+      {
+        "desc": "player crime skill >= 59",
+        "type": "skill",
+        "skill": "crime",
+        "level": 59,
+        "operator": ">="
+      }
+    ],
+    "baseProbabilityOfSuccess": 0.05,
+    "maxLvlProbabilityOfSuccess": 0.35,
+    "respawnTicks": 250,
+    "oddsOfHavingLootOnRespawn": 1,
+    "searchStartResult": [],
+    "searchEndResult": [],
+    "rareLootProbability": 0,
+    "rootLoot": null,
+    "baseLoot": [
+      {
+        "itemId": 6,
+        "name": "coins",
+        "isIOU": false,
+        "amount": 75
+      }
+    ],
+    "loot": [
+      {
+        "itemId": 71,
+        "name": "silver bar",
+        "isIOU": false,
+        "amount": 1,
+        "odds": 0.05
+      },
+      {
+        "itemId": 72,
+        "name": "gold bar",
+        "isIOU": false,
+        "amount": 1,
+        "odds": 0.02
+      },
+      {
+        "itemId": 174,
+        "name": "silver helmr",
+        "isIOU": false,
+        "amount": 1,
+        "odds": 0.001
+      },
+      {
+        "itemId": 141,
+        "name": "golden helmr",
+        "isIOU": false,
+        "amount": 1,
+        "odds": 0.0005
+      }
+    ]
+  },
+  {
+    "_id": 8,
+    "desc": "Picklock goblin arrow chest",
+    "xpRewards": [
+      {
+        "skill": "crime",
+        "amount": 40
+      }
+    ],
+    "requirements": [
+      {
+        "desc": "player crime skill >= 24",
+        "type": "skill",
+        "skill": "crime",
+        "level": 24,
+        "operator": ">="
+      }
+    ],
+    "baseProbabilityOfSuccess": 0.1,
+    "maxLvlProbabilityOfSuccess": 0.5,
+    "respawnTicks": 50,
+    "oddsOfHavingLootOnRespawn": 1,
+    "searchStartResult": [],
+    "searchEndResult": [],
+    "rareLootProbability": 0,
+    "rootLoot": null,
+    "baseLoot": [
+      {
+        "itemId": 6,
+        "name": "coins",
+        "isIOU": false,
+        "amount": 10
+      }
+    ],
+    "loot": [
+      {
+        "itemId": 328,
+        "name": "bronze arrowheads",
+        "isIOU": false,
+        "amount": 10,
+        "odds": 0.5
+      },
+      {
+        "itemId": 329,
+        "name": "iron arrowheadsr",
+        "isIOU": false,
+        "amount": 10,
+        "odds": 0.2
+      },
+      {
+        "itemId": 330,
+        "name": "steel arrowheadsr",
+        "isIOU": false,
+        "amount": 10,
+        "odds": 0.1
+      },
+      {
+        "itemId": 331,
+        "name": "palladium arrowheadsr",
+        "isIOU": false,
+        "amount": 10,
+        "odds": 0.025
+      }
+    ]
+  },
+  {
+    "_id": 9,
+    "desc": "Picklock wasteland chest",
+    "xpRewards": [
+      {
+        "skill": "crime",
+        "amount": 450
+      }
+    ],
+    "requirements": [
+      {
+        "desc": "player crime skill >= 76",
+        "type": "skill",
+        "skill": "crime",
+        "level": 76,
+        "operator": ">="
+      }
+    ],
+    "baseProbabilityOfSuccess": 0.025,
+    "maxLvlProbabilityOfSuccess": 0.2,
+    "respawnTicks": 400,
+    "oddsOfHavingLootOnRespawn": 1,
+    "searchStartResult": [],
+    "searchEndResult": [],
+    "rareLootProbability": 0,
+    "rootLoot": null,
+    "baseLoot": [
+      {
+        "itemId": 6,
+        "name": "coins",
+        "isIOU": false,
+        "amount": 1050
+      },
+      {
+        "itemId": 163,
+        "name": "dew beer",
+        "isIOU": false,
+        "amount": 1
+      },
+      {
+        "itemId": 184,
+        "name": "alchemy scroll",
+        "isIOU": false,
+        "amount": 5
+      },
+      {
+        "itemId": 181,
+        "name": "warp scroll",
+        "isIOU": false,
+        "amount": 2
+      }
+    ],
+    "loot": [
+      {
+        "itemId": 245,
+        "name": "celadon pickaxe",
+        "isIOU": false,
+        "amount": 1,
+        "odds": 0.0025
+      },
+      {
+        "itemId": 319,
+        "name": "celadon hatchet",
+        "isIOU": false,
+        "amount": 1,
+        "odds": 0.0025
+      },
+      {
+        "itemId": 246,
+        "name": "celadon gloves",
+        "isIOU": false,
+        "amount": 1,
+        "odds": 0.0025
+      },
+      {
+        "itemId": 258,
+        "name": "celadon helm",
+        "isIOU": false,
+        "amount": 1,
+        "odds": 0.001
+      }
+    ]
+  },
+  {
+    "_id": 10,
+    "desc": "Pirate's Chest",
+    "xpRewards": [],
+    "requirements": [
+      {
+        "desc": "player needs to have a pirate's key in their inventory",
+        "type": "inventoryitem",
+        "itemid": 227,
+        "isiou": false,
+        "amount": 1,
+        "operator": ">="
+      }
+    ],
+    "baseProbabilityOfSuccess": 1,
+    "maxLvlProbabilityOfSuccess": 1,
+    "respawnTicks": 0,
+    "oddsOfHavingLootOnRespawn": 1,
+    "searchStartResult": [],
+    "searchEndResult": [
+      {
+        "desc": "pirate's key removed from inventory",
+        "type": "PlayerGiveItems",
+        "playerGiveItems": [
+          {
+            "id": 227,
+            "isIOU": false,
+            "amt": 1
+          }
+        ]
+      }
+    ],
+    "rareLootProbability": 0,
+    "rootLoot": null,
+    "baseLoot": [
+      {
+        "itemId": 381,
+        "name": "pirate's bandana",
+        "isIOU": false,
+        "amount": 1
+      },
+      {
+        "itemId": 367,
+        "name": "palladium scimitar",
+        "isIOU": false,
+        "amount": 1
+      },
+      {
+        "itemId": 18,
+        "name": "cooked marlin",
+        "isIOU": true,
+        "amount": 5
+      },
+      {
+        "itemId": 178,
+        "name": "fury scroll",
+        "isIOU": false,
+        "amount": 50
+      },
+      {
+        "itemId": 179,
+        "name": "rage scroll",
+        "isIOU": false,
+        "amount": 20
+      }
+    ],
+    "loot": [
+      {
+        "itemId": 224,
+        "name": "starfish",
+        "isIOU": true,
+        "amount": 10,
+        "odds": 0.2
+      },
+      {
+        "itemId": 223,
+        "name": "seaweed",
+        "isIOU": false,
+        "amount": 1,
+        "odds": 0.2
+      },
+      {
+        "itemId": 71,
+        "name": "silver bar",
+        "isIOU": false,
+        "amount": 1,
+        "odds": 0.2
+      },
+      {
+        "itemId": 72,
+        "name": "gold bar",
+        "isIOU": false,
+        "amount": 1,
+        "odds": 0.2
+      },
+      {
+        "itemId": 27,
+        "name": "raw piranha",
+        "isIOU": false,
+        "amount": 1,
+        "odds": 0.2
+      }
+    ]
+  },
+  {
+    "_id": 11,
+    "desc": "Picklock Sage's chest",
+    "xpRewards": [
+      {
+        "skill": "crime",
+        "amount": 300
+      }
+    ],
+    "requirements": [
+      {
+        "desc": "player crime skill >= 71",
+        "type": "skill",
+        "skill": "crime",
+        "level": 71,
+        "operator": ">="
+      }
+    ],
+    "baseProbabilityOfSuccess": 0.025,
+    "maxLvlProbabilityOfSuccess": 0.25,
+    "respawnTicks": 350,
+    "oddsOfHavingLootOnRespawn": 1,
+    "searchStartResult": [],
+    "searchEndResult": [],
+    "rareLootProbability": 0,
+    "rootLoot": null,
+    "baseLoot": [
+      {
+        "itemId": 283,
+        "name": "aruba root",
+        "isIOU": false,
+        "amount": 1
+      },
+      {
+        "itemId": 284,
+        "name": "grenada root",
+        "isIOU": false,
+        "amount": 1
+      },
+      {
+        "itemId": 282,
+        "name": "samoan root",
+        "isIOU": false,
+        "amount": 1
+      }
+    ],
+    "loot": [
+      {
+        "itemId": 279,
+        "name": "nauru root",
+        "isIOU": false,
+        "amount": 1,
+        "odds": 0.5
+      },
+      {
+        "itemId": 278,
+        "name": "tonga root",
+        "isIOU": false,
+        "amount": 1,
+        "odds": 0.25
+      },
+      {
+        "itemId": 281,
+        "name": "vanua root",
+        "isIOU": false,
+        "amount": 1,
+        "odds": 0.125
+      },
+      {
+        "itemId": 293,
+        "name": "mariana root",
+        "isIOU": false,
+        "amount": 1,
+        "odds": 0.125
+      }
+    ]
+  },
+  {
+    "_id": 12,
+    "desc": "Search Bookshelf",
+    "xpRewards": [],
+    "requirements": [],
+    "baseProbabilityOfSuccess": 1,
+    "maxLvlProbabilityOfSuccess": 1,
+    "respawnTicks": 0,
+    "oddsOfHavingLootOnRespawn": 0,
+    "searchStartResult": [],
+    "searchEndResult": [],
+    "rareLootProbability": 0,
+    "rootLoot": null,
+    "baseLoot": [],
+    "loot": []
+  }
+]
