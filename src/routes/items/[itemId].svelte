@@ -24,10 +24,13 @@
 	import ItemGroundItemTable from '$lib/components/Item/ItemGroundItemTable.svelte';
 	import ItemNpcLootTable from '$lib/components/Item/ItemNpcLootTable.svelte';
 	import ItemQuestRewardsTable from '$lib/components/Item/ItemQuestRewardsTable.svelte';
+	import { generateItemDefNode } from '$lib/common/graph/graph';
 
 	export let item: ItemInformation;
 
 	console.log(item);
+
+	console.log(generateItemDefNode(item.itemDef));
 </script>
 
 <div class="main-content">

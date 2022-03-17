@@ -59,6 +59,14 @@ export const staticCachesDirPath = path.join(fs.realpathSync('.'), 'static', 'cl
 
 export const cacheDirPath = path.join(fs.realpathSync('.'), 'cache');
 
+export const currentCacheDirPath = path.join(
+	fs.realpathSync('.'),
+	'src',
+	'lib',
+	'cache',
+	'current'
+);
+
 /**
  * Get path of the provided client cache version directory.
  *

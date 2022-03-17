@@ -15,6 +15,14 @@ const config = {
 	kit: {
 		// adapter: adapter(),
 		adapter: adapter(),
+		vite: {
+			resolve: {
+				alias: {
+					$cache: resolve('./src/lib/cache/current'),
+					$cacheDefs: resolve('./src/lib/cache/current/defs')
+				}
+			}
+		},
 		// adapter: adapter({
 		// 	// default options are shown
 		// 	pages: 'build',

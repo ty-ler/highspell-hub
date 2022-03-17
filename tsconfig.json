@@ -28,9 +28,21 @@
 		"paths": {
 			"$lib": ["src/lib"],
 			"$lib/*": ["src/lib/*"],
+			"$cache": ["src/lib/cache/current"],
+			"$cache/*": ["src/lib/cache/current/*"],
+			"$cacheDefs": ["src/lib/cache/current/defs"],
+			"$cacheDefs/*": ["src/lib/cache/current/defs/*"],
 			"$static": ["static/"],
 			"$static/*": ["static/*"]
 		}
 	},
-	"include": ["bin/*.ts", "src/**/*.d.ts", "src/**/*.js", "src/**/*.ts", "src/**/*.svelte"]
+	"exclude": ["node_modules"],
+	"include": [
+		"bin/*.ts",
+		"src/**/*.d.ts",
+		"src/**/*.js",
+		"src/**/*.json",
+		"src/**/*.ts",
+		"src/**/*.svelte"
+	]
 }

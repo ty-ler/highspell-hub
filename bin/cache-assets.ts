@@ -156,20 +156,20 @@ let { files, latestClientVersion: currentClientVersion } = clientAssetsData;
 
 console.log(`Found assets version: ${currentClientVersion}`);
 
-if (cacheVersionDirPathExists('current')) {
-	const version = getCacheAssetsVersion('current');
-	console.log(`Latest cached version: ${version}`);
-	if (currentClientVersion !== version) {
-		console.log(`Updating latest cached version: ${version} -> ${currentClientVersion}...`);
-		await downloadFiles(files, 'current', currentClientVersion);
-	} else {
-		console.log('Latest cached version matches current client version.');
-	}
-} else {
-	console.log('Latest version not cached, downloading...');
-	createCacheVersionDir('current');
-	await downloadFiles(files, 'current', currentClientVersion);
-}
+// if (cacheVersionDirPathExists('current')) {
+// 	const version = getCacheAssetsVersion('current');
+// 	console.log(`Latest cached version: ${version}`);
+// 	if (currentClientVersion !== version) {
+// 		console.log(`Updating latest cached version: ${version} -> ${currentClientVersion}...`);
+// 		await downloadFiles(files, 'current', currentClientVersion);
+// 	} else {
+// 		console.log('Latest cached version matches current client version.');
+// 	}
+// } else {
+// console.log('Latest version not cached, downloading...');
+createCacheVersionDir('current');
+await downloadFiles(files, 'current', currentClientVersion);
+// }
 
 console.log();
 console.log(`Downloading version ${currentClientVersion} for cache...`);
