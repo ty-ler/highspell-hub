@@ -36,7 +36,7 @@
 			"$static/*": ["static/*"]
 		}
 	},
-	"exclude": ["node_modules"],
+	"exclude": ["node_modules", "cache/**/*"],
 	"include": [
 		"bin/*.ts",
 		"src/**/*.d.ts",

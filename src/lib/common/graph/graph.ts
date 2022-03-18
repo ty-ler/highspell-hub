@@ -1,10 +1,13 @@
 import type { ItemDef } from 'src/interfaces/game/item-defs';
-import type {
-	Conversation,
-	ConversationOptionRequirement,
-	ConversationResult
-} from 'src/interfaces/game/conversation';
-import { ConversationDefs } from './entity';
+import type { Conversation } from 'src/interfaces/game/conversation';
+import { ConversationDefs, NpcLoot } from './entity';
+import { walkConversationForRequirement } from './conversation';
+import {
+	filterLootTableByItemId,
+	filterNpcLootTableByItemId,
+	filterNpcLootTablesByItemId
+} from './npc-loot';
+import type { NpcLoot as INpcLoot } from 'src/interfaces/game/npc-loot';
 
 export enum GraphNodeType {
 	ConversationDef = 'ConversationDef',
@@ -48,30 +51,6 @@ const getItemDefNode = (itemDef: ItemDef): GraphNode<ItemDef> => {
 	};
 };
 
-const walkConversationForRequirement = (
-	result: ConversationResult,
-	matchCb: (r: ConversationOptionRequirement) => boolean
-) => {
-	const { options } = result;
-	if (!options) return null;
-	for (let i = 0; i < options.length; i++) {
-		const option = options[i];
-		const { requirements } = option;
-
-		if (!requirements || requirements.length === 0) continue;
-
-		// Look for matching item ID in requirements
-		const match = requirements.find((r) => matchCb(r));
-		if (match) return match;
-		else if (!match && option.result) {
-			const res = walkConversationForRequirement(option.result, matchCb);
-			if (res) return res;
-		}
-	}
-
-	return null;
-};
-
 /**
  * Get a node of an ItemDef and its relationships.
  *
@@ -101,6 +80,11 @@ export const generateItemDefNode = (itemDef: ItemDef): GraphNode<ItemDef> => {
 			type: GraphNodeType.ConversationDef,
 			ref: c
 		}));
+
+	const { rareLootTable, npcLootTables, rootLootTables } = NpcLoot as INpcLoot;
+
+	const filteredRlt = filterLootTableByItemId(rareLootTable, itemId);
+	const filteredNpcLooTables = filterNpcLootTablesByItemId(npcLootTables, itemId);
 
 	return {
 		type: GraphNodeType.ItemDef,
